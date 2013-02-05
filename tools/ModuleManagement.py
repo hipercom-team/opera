@@ -69,6 +69,11 @@ def openSerialPort(portNumber, timeOut):
         port = serial.Serial()
         port.port = portNumber
         port.rtscts = False # XXX: check
+    elif sys.platform == "darwin":
+        if portNumber != 0:
+            raise serial.SerialException("only one USB port is supported on MacOS-X")
+        port = serial.Serial("/dev/tty.usbserial")
+        port.rtscts = True
     else:
         print "platform:", sys.platform
         raise RuntimeError("Unknown Platform", sys.platform)
@@ -135,6 +140,7 @@ class ZExxModule:
         self.verbose = verbose
         self.timeOut = timeOut
         self.option = option
+        self.port = None
 
     def open(self):
         self.port = openSerialPort(self.portIndex, self.timeOut)
@@ -219,6 +225,29 @@ class ZExxModule:
         code = struct.unpack("B",(self.read(1)))
         result = self.read(max(frameLength-1,0))
         return code, result
+
+    def sendFrameDirect(self, dst, data, withAck = True):
+        # See II.4.20 "Application Frame Direct"
+        txOption = 0
+        if withAck: txOption = txOption | (1<<2) # see doc
+        cmd = struct.pack("<BBHBBHB",
+                          10+len(data), # FrameLength
+                          0xF3,         # Command
+                          dst,          # DstAddress
+                          0xcc, 0xbb,   # DstEndPoint, SrcEndPoint
+                          0xface,       # ClusterId
+                          len(data))    # afduLength
+        cmd += data
+        cmd += struct.pack("BB",
+                           txOption,     # txOption
+                           0x11)
+        self.write(cmd)
+        
+        frameLength, = struct.unpack("B",self.read(1))
+        code = struct.unpack("B",(self.read(1)))
+        result = self.read(max(frameLength-1,0))
+        return code, result
+        
 
     def exitConfigMode(self):
         # cf [ZeDoc] II.2 p6
@@ -540,6 +569,14 @@ def runAsProgram(progArgList, verbose = Verbose):
         #address = argList[1]
         #def permitJoining(self, address, permitDuration, tcSignifiance = 0x0):
 
+    elif name == "send":
+        ze.open()
+        address = eval(argList[0])
+        data = argList[1]
+        if len(argList) > 2:
+            withAck = eval(argList[2])
+        ze.sendFrameDirect(address, data, withAck = True)
+
     elif name == "long-flush":
         print "<emptying and dumping serial port>"
         ze.open()
@@ -548,7 +585,7 @@ def runAsProgram(progArgList, verbose = Verbose):
 
     else: raise ValueError("Unknown command", name)
 
-    if optionTable.flushDuration != None:
+    if optionTable.flushDuration != None and ze.port != None:
         ze.timeOut = optionTable.flushDuration
         ze.flush()
 

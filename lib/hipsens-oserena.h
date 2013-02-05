@@ -176,6 +176,7 @@ typedef struct s_serena_state_t {
   byte is_started:1; /**< is coloring started? */
   byte is_topology_set:1; /**< has the topology been set? */
   byte is_finished:1; /**< is coloring finished? */
+  hipsens_u16 color_seq_num;
   hipsens_time_t next_msg_color_time; /**< time for next color message */
 
   byte color;    /**< the color of the node */

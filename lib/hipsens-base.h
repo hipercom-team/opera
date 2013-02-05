@@ -356,7 +356,7 @@ typedef struct s_base_state_t {
 #endif /* WITH_FILE_IO */
     
 #ifdef WITH_OPERA_SYSTEM_INFO
-  hipsens_u8 sys_info;
+  hipsens_u16 sys_info;
   hipsens_u8 sys_info_color;
   hipsens_u8 sys_info_stability;
   hipsens_u8 sys_command[OPERA_MAX_COMMAND_SIZE];
@@ -385,6 +385,7 @@ extern address_t undefined_address;
 extern address_t broadcast_address;
 
 #ifdef WITH_OPERA_SYSTEM_INFO
+#define OPERA_SYSTEM_INFO_HAS_BROADCAST_OVERFLOW (1<<8)
 #define OPERA_SYSTEM_INFO_HAS_COLORING_MODE_REQUEST (1<<7)
 #define OPERA_SYSTEM_INFO_HAS_MAX_COLOR_REQUEST (1<<6)
 #define OPERA_SYSTEM_INFO_HAS_MAX_COLOR_RESPONSE (1<<5)

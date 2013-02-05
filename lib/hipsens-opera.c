@@ -96,15 +96,17 @@ void opera_update_wakeup_condition(opera_state_t* state);
 
 static void opera_internal_init(opera_state_t* state)
 {
-  state->flag_use_colored_slots = HIPSENS_FALSE;
-  state->flag_run_serena = HIPSENS_FALSE;
-  state->flag_new_color_trigger = HIPSENS_FALSE;
+  //state->flag_use_colored_slots = HIPSENS_FALSE;
+  //state->flag_run_serena = HIPSENS_FALSE;
+  //state->flag_new_color_trigger = HIPSENS_FALSE;
   state->is_colored_tree_root = HIPSENS_FALSE;
   state->should_start_serena = HIPSENS_FALSE;
   state->cycle_transmit_count = 0;
   state->is_blocked = HIPSENS_FALSE;
   state->should_be_reset = HIPSENS_FALSE;
   state->should_inc_colored_tree_seq = HIPSENS_FALSE;
+  state->should_stop_stc_generation = HIPSENS_FALSE;
+  state->has_set_color = HIPSENS_FALSE;
 
 #ifdef WITH_OPERA_ADDRESS_FILTER
   state->filter_nb_address = 0;
@@ -182,7 +184,7 @@ static void internal_opera_get_next_wakeup_condition
     wakeup_condition_update(condition, &additional_condition);
   }
 
-  if (state->serena_state.is_started /* XXX!! finished */) {
+  if (state->serena_state.is_started && !state->serena_state.is_finished) {
     serena_get_next_wakeup_condition(&state->serena_state, 
 				     &additional_condition);
     wakeup_condition_update(condition, &additional_condition);
@@ -241,14 +243,35 @@ static void opera_process_packet(opera_state_t* state,
     byte message_size = packet_data[1];
     byte header_and_message_size = message_size + MSG_SHORT_HEADER_SIZE;
 
-#ifdef WITH_OPERA_ADDRESS_FILTER
+#if defined(WITH_OPERA_ADDRESS_FILTER) || defined(WITH_INPACKET_LINK_STAT)
     if (packet_size >= 4) {
       buffer_t buffer;
       buffer_init(&buffer, packet_data+2, packet_size-2);
       address_t sender_address; 
       buffer_get_ADDRESS(&buffer, sender_address);
+
+#ifdef WITH_OPERA_ADDRESS_FILTER
       if (!is_address_accepted(state, sender_address))
 	return;
+#endif /* WITH_OPERA_ADDRESS_FILTER */
+#ifdef WITH_INPACKET_LINK_STAT
+      eond_neighbor_t* neighbor = eond_find_neighbor_by_address
+	(&state->eond_state, sender_address);
+      if (neighbor != NULL) {
+	unsigned int stat_offset = 0xff;
+	if (message_type == HIPSENS_MSG_HELLO) stat_offset = 0;
+	else if (message_type == HIPSENS_MSG_COLOR) stat_offset = 4;
+	else if (message_type == HIPSENS_MSG_STC) stat_offset = 8;
+	else if (message_type == HIPSENS_MSG_TREE_STATUS) stat_offset = 12;
+	
+	if (stat_offset != 0xff) {
+	  unsigned int count = 
+	    (((neighbor->link_stat >> stat_offset) & 0xfu)+1) & 0xfu;
+	  neighbor->link_stat = (neighbor->link_stat & ~(0xfu << stat_offset))
+	    | (count << stat_offset);
+	}
+      }
+#endif /* WITH_INPACKET_LINK_STAT */
     }
 #endif
 
@@ -257,6 +280,7 @@ static void opera_process_packet(opera_state_t* state,
 	     packet_size, header_and_message_size, initial_packet_size);
 		  return;
     }
+
 
     if (message_type == HIPSENS_MSG_HELLO) {
       /* process a message hello */
@@ -470,9 +494,19 @@ void opera_inc_colored_tree_seq(opera_state_t* state)
   state->eostc_state.my_tree->serena_info->tree_seq_num ++;
   
 #warning "[CA] XXX: check if it is ok to call MaCARIColoringModeOnRequest(FALSE), even if it was already FALSE"  
-  // XXX: MaCARIMaxColorRequest(NO_COLOR) should also be called
+
   hipsens_api_should_run_serena(state->base_state.opaque_extra_info, 
 				HIPSENS_FALSE);
+
+  if (state->has_set_color) {
+    // calling MaCARIMaxColorRequest(NO_COLOR)
+    hipsens_api_set_nb_color(state->base_state.opaque_extra_info, OCARI_NO_COLOR);
+  }
+  state->has_set_color = HIPSENS_FALSE;
+#ifdef WITH_OPERA_SYSTEM_INFO
+  state->base->sys_info = 0;
+  state->base->sys_info_color = 0;
+#endif /* WITH_OPERA_SYSTEM_INFO */
 }
 
 hipsens_bool opera_event_new_cycle(opera_state_t* state, byte unused)
@@ -486,6 +520,13 @@ hipsens_bool opera_event_new_cycle(opera_state_t* state, byte unused)
   }
   if (state->should_inc_colored_tree_seq)
     opera_inc_colored_tree_seq(state);
+
+  if (state->should_stop_stc_generation && state->eostc_state.my_tree != NULL) {
+    opera_inc_colored_tree_seq(state); /* put system in consistent state */
+    state->eostc_state.my_tree = NULL;
+    state->should_stop_stc_generation = HIPSENS_FALSE;
+  }
+  
 
   state->base->current_time++; /* update clock */
   STLOG(DBGsimmsg, ",'time':" FMT_HST, state->base->current_time);
@@ -639,13 +680,16 @@ void opera_pywrite(outstream_t out, opera_state_t* state)
   serena_pywrite(out, &(state->serena_state));
 
   FPRINTF(out,",\n 'isBlocked':%d", state->is_blocked);
+  FPRINTF(out,",\n 'hasSetColor':%d", state->has_set_color);
+  FPRINTF(out,",\n 'shouldStopStcGeneration':%d", 
+	  state->should_stop_stc_generation);
   FPRINTF(out,",\n 'shouldBeReset':%d", state->should_be_reset);
 
   if (state->is_colored_tree_root) {
-    FPRINTF(out, ",\n 'rootInfo': {");
-    FPRINTF(out, "'flagUseColoredSlots': %d", state->flag_use_colored_slots);
-    FPRINTF(out, ",'flagRunSerena': %d", state->flag_run_serena);
-    FPRINTF(out, ",'flagNewColorTrigger': %d}", state->flag_new_color_trigger);
+    //FPRINTF(out, ",\n 'rootInfo': {");
+    //FPRINTF(out, "'flagUseColoredSlots': %d", state->flag_use_colored_slots);
+    //FPRINTF(out, ",'flagRunSerena': %d", state->flag_run_serena);
+    //FPRINTF(out, ",'flagNewColorTrigger': %d}", state->flag_new_color_trigger);
   } else {
     FPRINTF(out, ",\n 'rootInfo': None");
   }
@@ -768,6 +812,7 @@ typedef enum {
   OPERA_GET_MY_TREE = 0x2c,
   OPERA_GET_TREE_SEQNUM = 0x2d,
   OPERA_INCREASE_TREE_SEQNUM = 0x2e,
+  OPERA_ERASE_MY_TREE = 0x2f,
 
   OPERA_SET_SERENA_COLOR_INTERVAL = 0x30,
   OPERA_GET_SERENA_COLOR_INTERVAL = 0x31,
@@ -972,6 +1017,17 @@ byte opera_serial_command(
     state->should_inc_colored_tree_seq = HIPSENS_TRUE;
     return 0;
   }
+
+  case OPERA_ERASE_MY_TREE: {
+    if (state->eostc_state.my_tree == NULL) {
+      *result_code = 0xfdu;
+      return 0;
+    }
+    *result_code = 0x01;
+    state->should_stop_stc_generation = HIPSENS_TRUE;
+    return 0;
+  }
+
 
 #ifdef WITH_OPERA_ADDRESS_FILTER
 #warning "[CA] compiled with address filters"

@@ -59,7 +59,14 @@ def popAddress(data):
 
 #---------------------------------------------------------------------------
 
-NeighState = { 0: "none", 1: "asym", 2: "sym" }
+NeighState = { 
+    0: "none", 
+    1: "asym", 
+    2: "sym",
+    ord('S'): "sys-info",
+    ord('M'): "sys-message",
+    ord("L"): "stat"
+}
 
 SimulMode = False # XXX: hack to indicate whether packets are from python simuls
 
@@ -80,6 +87,7 @@ def parseHelloMessage(packet):
         (result["estimateNbTwoHop"],), data = popStruct("B", data)
 
     linkSetList = []
+    neighAddrList = []
     while len(data) > 0:
         (linkCode, linkMessageSize), data = popStruct("BB", data)
         linkData = data[:linkMessageSize]
@@ -88,22 +96,64 @@ def parseHelloMessage(packet):
         if linkCode not in NeighState:
             linkSetList.append( (linkCode, linkData))
             continue
-        
-        linkList =[]
-        while len(linkData) > 0:
-            address, linkData = popAddress(linkData)
-            linkList.append(address)
 
-        if NeighState.get(linkCode, None) == "sym":
+        linkCodeStr = NeighState.get(linkCode, None)
+        if linkCodeStr == "sym" or linkCodeStr == "asym":
+            linkList =[]
+            while len(linkData) > 0:
+                address, linkData = popAddress(linkData)
+                linkList.append(address)
+        else: linkList = linkData
+
+        if linkCodeStr == "sym":
             linkSetList.append( ("sym", linkList) )
-        elif NeighState.get(linkCode, None) == "asym":
+            neighAddrList = neighAddrList + linkList
+
+        elif linkCodeStr == "asym":
             linkSetList.append( ("asym", linkList) )
+            neighAddrList = neighAddrList + linkList
+
+        elif linkCodeStr == "sys-info":
+            #s += " sysInfo="
+            ##+ "".join(
+            ##["%02x" % ord(x) for x in linkList])
+            sysInfo,stability,colorInfo = struct.unpack("!HBB", linkList[0:4])
+            #s += "%02x:" % sysInfo
+            result["sys-info"] =  [SystemInfo[x] for x in range(8)
+                          if (x in SystemInfo) and ((1<<x) & sysInfo) != 0]
+            if colorInfo != 0:
+                result["color-info"] = {
+                    "color": (colorInfo&0xf)-1,
+                    "nb-color": (colorInfo >> 4)
+                    }
+        elif linkCodeStr == "sys-message":
+            fileName = linkList[2:]
+            pos = fileName.find('\x00')
+            if pos >= 0:
+                fileName = (fileName[pos+1:] + fileName[:pos]
+                            ).replace('\x00', "")
+            result["sys-message"] = (fileName,
+                                     struct.unpack("!H",linkList[:2])[0])
+        elif linkCodeStr == "stat":
+            assert struct.calcsize("H")*len(neighAddrList) == len(linkList)
+            neighStatTable = {}
+            for i,neighAddr in enumerate(neighAddrList):
+                stat = struct.unpack("!H", linkList[2*i:2*i+2])[0]
+                #neighStat = (ra(neighAddrList[i]) + ":"
+                #             + ",".join(
+                neighStat = [((stat >> (4*j)) & 0xf) for j in range(4)]
+                #neighStatList.append(neighStat)
+                neighStatTable[neighAddrList[i]] = neighStat
+            #s += " stat=" + "/".join(neighStatList)
+            result["stat"] = neighStatTable
+
         else: linkSetList.append( (linkCode, linkList) )
       
     result["linkInfo"] = linkSetList
     return result
 
 SystemInfo = {
+    8: "BroadcastOverflow",
     7: "ColoringModeRequestCalled",
     6: "MaxColorRequestCalled",
     5: "MaxColorResponseCalled",
@@ -117,31 +167,46 @@ SystemInfo = {
 def reprHelloMessage(packetAsStruct, verbosity = 0):
     p = packetAsStruct
     s = "[Hello(%s):" % ra(p["address"])
-    if (verbosity >= 1): 
+    if (verbosity >= 0): 
         s += " seq=%s"% p["seqNum"]
     if (verbosity >= 2): 
         s += " vtime=%s energy=%s" % (p["vtime"], p["energyClass"])
+    else: s += " energyClass=%s" % (p["energyClass"],)
+
+    symList = []
+    asymList = []
     for linkCode, linkList in p["linkInfo"]:
-        if linkCode == ord('S'):
-            s += " sysInfo="
-            #+ "".join(
-            #["%02x" % ord(x) for x in linkList])
-            sysInfo,stability,colorInfo = struct.unpack("BBB", linkList[0:3])
-            s += "%02x:" % sysInfo
-            s += ",".join([SystemInfo[x] for x in range(8)
-                           if (x in SystemInfo) and ((1<<x) & sysInfo) != 0])
-            if colorInfo != 0:
-                s += "/col:%s,%s" % (colorInfo >> 4, colorInfo&0xf)
-        elif linkCode == ord('M'):
-            fileName = linkList[2:]
-            pos = fileName.find('\x00')
-            if pos >= 0:
-                fileName = (fileName[pos+1:] + fileName[:pos]).replace('\x00', "")
-            s += " warn=%s:%d" % (fileName,
-                                struct.unpack("!H",linkList[:2])[0])
-        else:
-            #if linkCode in ["sym", "asym"]:
+        if linkCode == "sym": symList = linkList
+        elif linkCode == "asym": asymList = linkList
+    neighAddrList = symList + asymList
+
+    for linkCode, linkList in p["linkInfo"]:
+        if linkCode in ["sym", "asym"]:
             s += " %s" % linkCode + "=" + ",".join([ra(x) for x in linkList])
+
+    if verbosity >= 1 and "color-info" in p:
+        if p["color-info"]["nb-color"] != 0:
+            s += " color=%s/%s" % (p["color-info"]["color"],
+                                     p["color-info"]["nb-color"])
+        else: s += " color=%s" % p["color-info"]["color"]
+
+    if verbosity >= 1 and "sys-info" in p:
+        s += " sysInfo=" + ",".join(p["sys-info"])
+
+    if verbosity >= 1 and "sys-message" in p:
+        fileName, line = p["sys-message"]
+        s += " warn=%s:%d" % (fileName, line)
+        
+    if verbosity >= 1 and "stat" in p:
+        neighStatList = []
+        for i,neighAddr in enumerate(neighAddrList):
+            if neighAddr in p["stat"]:
+                neighStat = (ra(neighAddr) + ":"
+                             +",".join(["%s"%x for x in p["stat"][neighAddr]]))
+            neighStatList.append(neighStat)
+        s += " stat=" + "/".join(neighStatList)        
+                          
+
     s += "]"
     return s
 
@@ -156,7 +221,7 @@ def reprHelloMessage(packetAsStruct, verbosity = 0):
 #define EOSTC_FLAG_NEW_NEIGHBOR           0
 
 STCFlag = {
-    7: "colored", # tree
+    7: "to-color", # tree
     6: "stable",
     5: "unstable",
     4: "inconsistent-stability",
@@ -188,7 +253,7 @@ def parseSTCMessage(packet):
 
 def reprSTCMessage(packetAsStruct, verbosity = 0):
     p = packetAsStruct
-    s = "[STC ("+ra(p["sender"])+")"
+    s = "[STC("+ra(p["sender"])+")"
     if p["sender"] != p["parent"]:
         s += "->" + ra(p["parent"])
     if p["parent"] != p["root"]:
@@ -226,7 +291,7 @@ def parseTreeStatusMessage(packet):
 
 def reprTreeStatusMessage(packetAsStruct, verbosity = 0):
     p = packetAsStruct
-    s = "[TreeStatus ("+ra(p["sender"])+")"
+    s = "[TreeStatus("+ra(p["sender"])+")"
     if p["sender"] != p["root"]:
         s += "-.->" + ra(p["root"])
     s += " #%s.%s" % (p["treeSeqNum"],p["seqNum"])
@@ -310,6 +375,10 @@ def parseColorMessage(packet):
     (bitmap2,), data = popStruct("%ds" % sizeBitmap2, data)
 
     if len(data) > 0:
+        (seqNum,), data = popStruct("!H", data)
+    else: seqNum = None
+
+    if len(data) > 0:
         result["extraData"] = data
 
     result["maxPrio1"] = max2Prio1
@@ -318,6 +387,8 @@ def parseColorMessage(packet):
     result["colorBitmap1"] = bitmapToList(bitmap1)
     result["colorBitmap2"] = bitmapToList(bitmap2)
 
+    result["seqNum"] = seqNum
+
     return result
 
 
@@ -325,6 +396,7 @@ def reprColorMessage(packetAsStruct, verbosity = 0):
     p = packetAsStruct
     s = "[Color(%s)" % ra(p["sender"])
 
+    s += " seq=%s"% p["seqNum"]
     if verbosity >= 1:
         s += " " + ra2(p["root"]) +":%s" % (p["treeSeqNum"])
 
@@ -348,7 +420,7 @@ def reprColorMessage(packetAsStruct, verbosity = 0):
         if len(p["colorBitmap1"]) > 0: s += ";"
         else: s += " c=;"
         s += ",".join(["%x" % x for x in p["colorBitmap2"]])
-
+        
     if "extraData" in p:
         s += " extra=" + repr(p["extraData"])
 

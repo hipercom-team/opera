@@ -37,17 +37,16 @@
 #define OCARI_HELLO_INTERVAL  5 /* cycles */
 
 /* How long before a neighbor expires */
-#define OCARI_NEIGH_HOLD_TIME ((OCARI_HELLO_INTERVAL*7)/2) /* cycles */
+#define OCARI_NEIGH_HOLD_TIME ((OCARI_HELLO_INTERVAL*7)) /* cycles */
 
 /* How long to delay Hello message generation */
-//#define OCARI_DELAY_EOND 2000 /* cycles */
-#define OCARI_DELAY_EOND 0 /* cycles */
+#define OCARI_DELAY_EOND 8000 /* cycles */
 
 /* Interval of STC message */
 #define OCARI_STC_INTERVAL    5 /* cycles */
 
 /* How long before the tree completly expires */
-#define OCARI_TREE_HOLD_TIME  ((OCARI_STC_INTERVAL*7)/2) /* cycles */
+#define OCARI_TREE_HOLD_TIME  ((OCARI_STC_INTERVAL*7)) /* cycles */
 
 /* How long to delay STC message generation */
 #define OCARI_DELAY_EOSTC 0 /* cycles */
@@ -57,7 +56,7 @@
 #define OCARI_STABILITY_TIME 20 /* cycles */
   
 /* Interval of Color messages */
-#define OCARI_COLOR_INTERVAL 5 /* cycles */
+#define OCARI_COLOR_INTERVAL 2 /* cycles */
 
 /*---------------------------------------------------------------------------*/
 
@@ -91,6 +90,7 @@ static void opera_update_config(opera_config_t* config)
 
   /* Maximum number of messages sent per cycle */
 #ifdef WITH_SIMUL
+  //#warning "[CA] messages limited to one per cycle"
   config->transmit_rate_limit = 0; /* message per cycle */
 #else
   config->transmit_rate_limit = 1; /* message per cycle (for OCARI) */

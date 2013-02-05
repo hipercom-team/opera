@@ -307,6 +307,9 @@ static void eond_process_hello_update_neighbor
 #ifdef WITH_STAT
     neighbor->recv_count = 0;
 #endif
+#ifdef WITH_INPACKET_LINK_STAT
+    neighbor->link_stat = 0;
+#endif /* WITH_INPACKET_LINK_STAT */
   } else {
     neighbor = &(state->neighbor_table[entry_index]);
   }
@@ -481,6 +484,11 @@ static void eond_update_next_hello_time(eond_state_t* state)
 void eond_start(eond_state_t* state)
 { eond_update_next_hello_time(state); }
 
+#ifndef WITH_SIMUL
+//extern char gBroadcastTableOverflow; // XXX: remove this is a hack
+char gBroadcastTableOverflow = 0; // XXX: remove this is a hack
+#endif
+
 int  eond_generate_hello_message(eond_state_t* state, 
 				 byte* packet, int max_packet_size)
 {  
@@ -524,6 +532,7 @@ int  eond_generate_hello_message(eond_state_t* state,
     else if (neighbor->state == EOND_Asym)
       count_asym++;
   }
+  int count_total = count_sym + count_asym;
 
   /* put sym neighbors */
   if (count_sym > 0) {
@@ -555,12 +564,17 @@ int  eond_generate_hello_message(eond_state_t* state,
 #ifdef WITH_OPERA_SYSTEM_INFO
   /* put state information in Hello message */
   buffer_put_u8(&buffer, EOND_SYSTEM_INFO);
-  buffer_put_u8(&buffer, 3);
+  buffer_put_u8(&buffer, 4);
   if (state->base->error_count > 0)
     state->base->sys_info |= OPERA_SYSTEM_INFO_HAS_ERROR;
   if (state->base->warning_count > 0)
     state->base->sys_info |= OPERA_SYSTEM_INFO_HAS_WARNING;
-  buffer_put_u8(&buffer, state->base->sys_info);
+#ifndef WITH_SIMUL
+  if (gBroadcastTableOverflow) 
+    state->base->sys_info |= OPERA_SYSTEM_INFO_HAS_BROADCAST_OVERFLOW;
+  else state->base->sys_info &= ~OPERA_SYSTEM_INFO_HAS_BROADCAST_OVERFLOW;
+#endif /* ndef WITH_SIMUL */  
+  buffer_put_u16(&buffer, state->base->sys_info);
   buffer_put_u8(&buffer, state->base->sys_info_stability);
   buffer_put_u8(&buffer, state->base->sys_info_color);
   
@@ -573,7 +587,27 @@ int  eond_generate_hello_message(eond_state_t* state,
                     sizeof(state->base->str_info));
   }
 #endif /* WITH_OPERA_INPACKET_MSG */  
-#endif
+#endif /* WITH_OPERA_SYSTEM_INFO */
+
+#ifdef WITH_INPACKET_LINK_STAT
+  buffer_put_u8(&buffer, EOND_INPACKET_LINK_STAT);
+  buffer_put_u8(&buffer, count_total*2); /* sizeof link_stat */
+  for (i=0; i<EOND_MAX_NEIGHBOR(state); i++) {
+    eond_neighbor_t* neighbor = &(state->neighbor_table[i]);
+    if (neighbor->state == EOND_Sym) {
+      buffer_put_u16(&buffer, neighbor->link_stat);
+      DBG(count_total--);
+    }
+  }
+  for (i=0; i<EOND_MAX_NEIGHBOR(state); i++) {
+    eond_neighbor_t* neighbor = &(state->neighbor_table[i]);
+    if (neighbor->state == EOND_Asym) {
+      buffer_put_u16(&buffer, neighbor->link_stat);
+      DBG(count_total--);
+    }
+  }
+  DBG( ASSERT(count_total == 0) );
+#endif /* WITH_INPACKET_LINK_STAT */
   
   /* --- update size field */
   if (buffer.status != HIPSENS_TRUE) {

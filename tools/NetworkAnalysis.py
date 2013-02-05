@@ -29,9 +29,9 @@ import tempfile, webbrowser
 #TreeExpireTime = 5*3.5
 #ColorExpireTime = 5*3.5
 
-NeighExpireTime = 2*5*3.5
-TreeExpireTime  = 2*5*3.5
-ColorExpireTime = 2*5*3.5
+NeighExpireTime = 2*5*7
+TreeExpireTime  = 2*5*7
+ColorExpireTime = 2*5*7
 
 #---------------------------------------------------------------------------
 
@@ -55,6 +55,9 @@ GraphColorList = ["yellow", "GreenYellow", "Tan", "PeachPuff",
 if sys.platform == "win32": 
     stateDir = tempfile.gettempdir()
     print "platform win32: storing state in directory:", stateDir
+elif sys.platform == "darwin":
+    stateDir = "/Volumes/RamDisk"
+    print "platform Mac OS X: storing state in directory:", stateDir
 else: 
     stateDir = "/dev/shm"
     print "platform linux: storing state in directory:", stateDir
@@ -82,13 +85,13 @@ def getDotOutput(graphAsDot, progName = dotPath, format = "png"):
         ps.stdin.write(graphAsDot)
         ps.stdin.close()
         out = ps.stdout.read()
-        print len(out)
+        #print len(out)
     except:
         print "FATAL: Cannot run 'dot' as", progName
         traceback.print_exc()
         out = ""
 
-    print graphAsDot
+    #print graphAsDot
     return out
 
 def runDot(graphAsDot, dotFileName, graphFileName, 
@@ -240,7 +243,7 @@ class SnapshotFormatter:
                               % (nodeId, otherNodeId))
                     elif linkType == "sym":
                         r += "  %s -> %s;\n" % (nodeId, otherNodeId)
-                    elif linkType == ord('S') or linkType == ord('M'):
+                    elif linkType == ord('S') or linkType == ord('M') or linkType == ord('L'):
                         pass
                     else: raise ValueError("Unknown linkType", linkType)
 

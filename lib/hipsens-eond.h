@@ -59,11 +59,15 @@ typedef enum {
 } eond_neighbor_state_t;
 
 #ifdef WITH_OPERA_SYSTEM_INFO
-#define EOND_SYSTEM_INFO ('S')
+#define EOND_SYSTEM_INFO 'S'
 #endif
 
 #ifdef WITH_OPERA_INPACKET_MSG
-#define EOND_INPACKET_MSG ('M')
+#define EOND_INPACKET_MSG 'M'
+#endif
+
+#ifdef WITH_INPACKET_LINK_STAT
+#define EOND_INPACKET_LINK_STAT 'L'
 #endif
 
 /**
@@ -89,7 +93,9 @@ typedef struct s_nd_neighbor_t {
   hipsens_u8 nb_2hop;
 #endif
 
-  eond_config_t* config;
+#ifdef WITH_INPACKET_LINK_STAT
+  hipsens_u16 link_stat;
+#endif /* WITH_INPACKET_LINK_STAT */
 
 #ifdef WITH_ENERGY
   /** energy class */

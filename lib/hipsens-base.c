@@ -531,7 +531,6 @@ void base_state_init(base_state_t* state, void* opaque_extra_info)
   state->sys_info_color = 0;
   state->sys_info_stability = 0;
   state->sys_command[0] = 0;
-  memset(state->str_info, 0, sizeof(state->str_info));
 #endif /* WITH_OPERA_SYSTEM_INFO */  
   
 #ifdef WITH_OPERA_INPACKET_MSG

@@ -109,6 +109,39 @@ def parseZigbee(packet):
 
     return r
 
+MacCommandType = {
+    0x01: "association-request",
+    0x02: "association-response",
+    0x03: "disassociation-notification",
+    0x04: "data-request",
+    0x05: "pan-id-conflict-notification",
+    0x06: "orphan-notification",
+    0x07: "beacon-request",
+    0x08: "coordinator-realignment",
+    0x09: "gts-request"
+}
+
+AssociationStatusTable = {
+    0x00: "successful",
+    0x01: "pan-at-capacity",
+    0x02: "pan-access-denied"
+}
+
+def parseMacCommand(payload):
+    # 15.4 p112
+    #return " ".join(["%02x" % ord(x) for x in payload])
+    (command,), payload = popStruct("B", payload)
+    command = MacCommandType.get(command, command)
+    r = { "command": command }
+    if command == "association-request":
+        pass
+    elif command == "association-response":
+        (address, statusField), payload = popStruct("2sB", payload)
+        r["address"] = address
+        r["status"] = AssociationStatusTable.get(statusField, statusField)
+    else:
+        r["payload"] = " ".join(["%02x" % ord(x) for x in payload])
+    return r
 
 def parseOcariBeacon(payload):
     # ZigBee Specification - Document 053474r17 - 2007
@@ -146,7 +179,8 @@ def parseOcariBeacon(payload):
     #(activityBitmap,), payload = popStruct("I", payload)
     activityBitmap = "<XXX:is field present?>"
        
-    warnings.warn("note: not checking properly if there is a color seq.")
+    #warnings.warn("note: not checking properly if there is a color seq.")
+    # XXX
     if len(payload) > 0:
         (colorSeq,),payload = popStruct("B", payload)
     else: colorSeq = None
@@ -267,6 +301,8 @@ def parseDot15_4(packet):
         r["zigbee"] = parseZigbee(packet)
     elif frameType == "beacon":
         r["beacon"] = parseBeacon(packet)
+    elif frameType == "MAC-command":
+        r["MAC-command"] = parseMacCommand(packet)
 
     return r
 

@@ -43,11 +43,13 @@ CommandList = [
     ("hard-reset", "Hard Reset", ["hard-reset"]),
     (None,None,None),
     ("eond-start", "EOND Start", ["opera", "set", "eond-start-delay", "0"]),
-    ("start-stc", "[!]STC", ["opera", "start-eostc", "0"]),
     ("start-stc-colored", "[!!!]ColSTC", ["opera", "start-eostc", "1"]),
     ("next-stc-colored", "[!!!]IncSTC", ["opera", "next-eostc"]),
     ("tree-seq-num", "RootTreeSeq", ["opera", "get", "tree-seqnum"]),
     (None,None,None),
+    ("start-stc", "[!]STC", ["opera", "start-eostc", "0"]),
+#   ("eond-pause", "EOND Pause", ["opera", "set", "eond-start-delay", "16000"]),
+    ("eostc-stop", "EOSTC Stop", ["opera", "stop-eostc"]),
     ("no-filter", "No Filter", ["opera", "address-filter", "none"]),
     ("filter-0", "Filt Only 0", ["opera", "address-filter", "accept", "0"]),
     ("filter-1", "Filt Only 1", ["opera", "address-filter", "accept", "1"]),
@@ -93,8 +95,6 @@ class TkModuleManagement: # Presenter-View
         #self.initPresenter()
         #print "**** WARNING - this interface is experimental ****"
         #print "     [press several times on buttons and hope for the best]"
-        #print "TODO: This application will freeze under Windows"
-        #print "       currently only available for Linux"
 
     #--------------------------------------------------
         

@@ -133,12 +133,15 @@ void opera_on_coloring_finished(struct s_serena_state_t* state)
 {
   opera_state_t* opera = (opera_state_t*) state->base->opaque_opera;
 
+
   opera->serena_state.is_finished = HIPSENS_TRUE;
 
   int nb_color = serena_get_nb_color(&opera->serena_state);
   if (nb_color == 0) {
     STWARN("opera_on_coloring_finished but no color available.\n");
   }
+  
+  opera->has_set_color = (nb_color > 0);
   hipsens_api_set_nb_color(opera->base_state.opaque_extra_info, nb_color);
   hipsens_api_should_run_serena(opera->base_state.opaque_extra_info, 
 				HIPSENS_FALSE);
@@ -158,13 +161,16 @@ void hipsens_eostc_event_my_tree_flags_change(eostc_state_t* state,
 {
   ASSERT( IS_FOR_SERENA(*tree) );
 
-  if ( (new_flags & (1<<EOSTC_FLAG_STABLE_BIT)) == 0 )
+  if ( (new_flags & (1u<<EOSTC_FLAG_STABLE_BIT)) == 0 )
     return; /* XXX: handle the 'unstable' case */
 
   /* the tree became stable: copy topology, update external state,
      and start SERENA */
   opera_state_t* opera = (opera_state_t*) state->base->opaque_opera;
   opera_set_serena_topology_info(opera, tree);
+
+  if (opera->has_set_color)
+    return; /* we wait for an explicit re-coloring request (via serial cmd.) */
   
   hipsens_api_should_run_serena(opera->base_state.opaque_extra_info, 
 				HIPSENS_TRUE);
@@ -179,7 +185,7 @@ void hipsens_eostc_event_my_tree_flags_change(eostc_state_t* state,
   This function is called when a node becomes "is_locally_stable" ;
   (the first time a Tree Status stable will be generated).
 
-  The function will s the topology informations to SERENA
+  The function will set the topology information for SERENA
  */
 void hipsens_eostc_event_tree_stability(eostc_state_t* state, 
 					eostc_tree_t* tree)
@@ -301,6 +307,7 @@ void opera_external_notify_color_use(opera_state_t* state,
 #endif /* WITH_OPERA_SYSTEM_INFO */  
   if (should_use_color) {
     serena_state_t* serena = &state->serena_state;
+
     if (serena->final_node_color != OCARI_NO_COLOR) {
       hipsens_api_set_color_info(state->base_state.opaque_extra_info,
 				 serena->final_node_color,
@@ -374,6 +381,6 @@ void hipsens_api_set_color_info
   MaCARIMaxColorResponse(node_color, nb_neighbor_color, neighbor_color_list);
 }
 
-#endif // WITH_SIMUL
+#endif /* WITH_SIMUL */
 
 /*---------------------------------------------------------------------------*/

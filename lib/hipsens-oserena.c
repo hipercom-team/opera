@@ -29,7 +29,7 @@
 /*---------------------------------------------------------------------------*/
 
 #ifdef WITH_SIMUL
-#define WITH_START_ON_COLOR_MESSAGE
+//#define WITH_START_ON_COLOR_MESSAGE
 #endif
 
 #define DEFAULT_MSG_COLOR_INTERVAL_SEC 2 /* seconds */
@@ -98,6 +98,7 @@ void new__serena_state_init(serena_state_t* state, base_state_t* base,
   state->size_sent_msg = 0;
   state->first_empty_msg = HIPSENS_FALSE;
 #endif //defined(WITHOUT_LOSS) && defined(WITH_SIMUL)
+  state->color_seq_num = 0;
 }
 
 /* this is NO_COLOR in OCARI */
@@ -671,6 +672,8 @@ static void serena_internal_process_message(serena_state_t* state,
     neighbor->child_max_color = nb_color - 1;
   }
 
+  /* XXX: can parse the color seq num here */
+
   STLOG(DBGsrn, "\n");
 }
 
@@ -1110,6 +1113,10 @@ static int serena_internal_generate_message(serena_state_t* state,
   /* msg: color information */
   buffer_put_bitmap(buffer, &(state->color_bitmap1));
   buffer_put_bitmap(buffer, &(state->color_bitmap2));
+
+  /* msg: sequence number */
+  buffer_put_u16(buffer, state->color_seq_num);
+  state->color_seq_num ++;
 
   /* check buffer ok */
   if (buffer->status != HIPSENS_TRUE) {

@@ -495,6 +495,11 @@ static void eostc_refresh_tree(eostc_state_t* state,
       serena_tree->limit_tree_status = HIPSENS_FALSE;
     if (reset_serena_children || hipsens_seqnum_cmp
 	(serena_tree->tree_seq_num, message->tree_seq_num) < 0) {/*XXX <= to <*/
+#ifdef WITH_OPERA_SYSTEM_INFO
+          // XXX:move
+        state->base->sys_info = 0;
+        state->base->sys_info_color = 0;
+#endif /* WITH_OPERA_SYSTEM_INFO */
       clear_serena_tree(serena_tree);
       // XXX: double check these additions
       opera_ensure_serena_stopped(state);
@@ -616,12 +621,27 @@ static void update_tree_stability_status(eostc_state_t* state,
       serena_tree->has_sent_stable = HIPSENS_TRUE;
       serena_tree->should_generate_tree_status = HIPSENS_TRUE;
       hipsens_eostc_event_tree_stability(state, tree);
+    } else {
+      hipsens_eostc_event_my_tree_flags_change
+	(state, tree, (1<<EOSTC_FLAG_STABLE_BIT) ); /* XXX: more general */
     }
   }
 }
 
-#define EOSTC_MASK_REMOVE_STABLE_BIT (~(1<<EOSTC_FLAG_STABLE_BIT))
+#define EOSTC_MASK_REMOVE_STABLE_BIT (~(hipsens_u16)(1u<<EOSTC_FLAG_STABLE_BIT))
 
+
+static eostc_child_t* eostc_find_child_in_tree(eostc_serena_tree_t* serena_tree,
+					       address_t sender_address)
+{
+  int i;
+  eostc_child_t* child = NULL;
+  for (i=0; i<MAX_NEIGHBOR; i++)
+    if (serena_tree->child[i].status != Child_None
+	&& hipsens_address_equal(serena_tree->child[i].address, sender_address))
+      child = &serena_tree->child[i];
+  return child;
+}
 
 int eostc_process_tree_status_message(eostc_state_t* state, 
 				      byte* packet, int packet_size)
@@ -705,7 +725,8 @@ int eostc_process_tree_status_message(eostc_state_t* state,
   serena_tree->flags |= flags & EOSTC_MASK_REMOVE_STABLE_BIT;
 
   /* - if from the parent, consider as an acknowledgement of some flags */
-  if (hipsens_address_equal(tree->parent_address, sender_address)) {
+  if (tree->status != EOSTC_IsRoot /* <- just to be safe */
+      && hipsens_address_equal(tree->parent_address, sender_address)) {
     if ((serena_tree->flags & ~flags) == 0)
       serena_tree->should_generate_tree_status = HIPSENS_FALSE;
     /* XXX:note: this works even if we change parent, because
@@ -713,12 +734,7 @@ int eostc_process_tree_status_message(eostc_state_t* state,
     return result; /* no more processing to do */
   }
 
-  int i;
-  eostc_child_t* child = NULL;
-  for (i=0; i<MAX_NEIGHBOR; i++) 
-    if (serena_tree->child[i].status != Child_None
-	&& hipsens_address_equal(serena_tree->child[i].address, sender_address))
-      child = &serena_tree->child[i];
+  eostc_child_t* child = eostc_find_child_in_tree(serena_tree, sender_address);
 
   if (child != NULL) {
     /* - child found, update it */
@@ -736,8 +752,11 @@ int eostc_process_tree_status_message(eostc_state_t* state,
     //if (!hipsens_address_equal(tree->parent_address, my_address))
     if (tree->status != EOSTC_IsRoot)
       serena_tree->should_generate_tree_status = HIPSENS_TRUE;
+#if 0
+    // XXX:remove: this is now done inside update_tree_stability_status(...):
     else hipsens_eostc_event_my_tree_flags_change
 	   (state, tree, (serena_tree->flags & ~old_flags));
+#endif
   } 
   
   return result;
@@ -862,6 +881,21 @@ int eostc_process_stc_message(eostc_state_t* state,
 
       } else {
 	/* message coming neither from parent nor from child */
+
+	if (seqnum_cmp >= 0 && IS_FOR_SERENA(*tree)) {
+	  /* check if it is a former child */
+	  eostc_serena_tree_t* serena_tree = tree->serena_info;
+	  ASSERT( tree->serena_info != NULL );
+	  eostc_child_t* child = eostc_find_child_in_tree
+	    (serena_tree, message.sender_address);
+	  if (child != NULL) {
+#warning "[CA] not updating stability status/timers on detection of child parent change"
+	    child->status = Child_None; /* remove the child */
+	    STWARN("XXX: child has selected a new parent ("FMT_HST")\n",
+		   state->base->current_time);
+	  }
+	}
+
 	if (message.cost < tree->current_cost && seqnum_cmp >= 0) {
 	  /* parent change */
 	  eostc_event_topology_change(state, tree, EOSTC_FLAG_TREE_CHANGE);

@@ -81,6 +81,9 @@ NWK_CDE_OPERA = 0x0B
 if sys.platform == "win32": 
     stateDir = tempfile.gettempdir()
     print "platform win32: storing state in directory:", stateDir
+elif sys.platform == "darwin":
+    stateDir = "/Volumes/Ramdisk"
+    print "platform MacOS-X: storing state in directory:", stateDir
 else: 
     stateDir = "/dev/shm"
     print "platform linux: storing state in directory:", stateDir
@@ -126,7 +129,7 @@ def pcapFormatPacket(clock, packet):
     packetSize = min(actualPacketSize, MaxPacketSize)
     result = struct.pack("!IIII", 
                          int(clock), # seconds
-                         (clock-int(clock))* 1000000, # microseconds
+                         int((clock-int(clock))* 1000000), # microseconds
                          packetSize,
                          actualPacketSize)
     result += packet[:packetSize]
@@ -163,11 +166,20 @@ def selectColor(name):
 
 operaVolume = 0
 
-def showOperaPacket(rawPacket, infoTable):
+def ensureNodeAddress(addr, infoTable):
+    if addr not in infoTable["nodeTable"]:
+        infoTable["nodeTable"][addr] = { 
+            "tree": {}, "treeStatus": {}  }
+    return infoTable["nodeTable"][addr]
+
+
+def showOperaPacket(rawPacket, infoTable, packetInfo):
     global operaVolume
+    if option.shortDisplay: packetVerbosity = 0
+    else: packetVerbosity = 1
     try:
         structPacket = OperaPacketParse.parsePacket(rawPacket)
-        strPacket = OperaPacketParse.reprPacket(structPacket, 1)
+        strPacket = OperaPacketParse.reprPacket(structPacket, packetVerbosity)
     except: 
         print "PARSE ERROR************************"
         traceback.print_exc()
@@ -175,32 +187,27 @@ def showOperaPacket(rawPacket, infoTable):
         print "   ", toHex(rawPacket)
         return
 
-    def ensureNodeAddress(addr):
-        if addr not in infoTable["nodeTable"]:
-            infoTable["nodeTable"][addr] = { 
-                "tree": {}, "treeStatus": {}  }
-        return infoTable["nodeTable"][addr]
-
     #print structPacket
+    structPacket["header"] = packetInfo
     structPacket["timestamp"] = infoTable["timestamp"]
     packetType = structPacket.get("type", None)
     if "nodeTable" not in infoTable:
         infoTable["nodeTable"] = {}
     if packetType == "Hello":
         address = structPacket["address"]
-        nodeInfo = ensureNodeAddress(address)
+        nodeInfo = ensureNodeAddress(address, infoTable)
         nodeInfo["lastHello"] = structPacket
     elif packetType == "STC":
         sender = structPacket["sender"]
-        nodeInfo = ensureNodeAddress(sender)
+        nodeInfo = ensureNodeAddress(sender, infoTable)
         nodeInfo["tree"][structPacket["root"]] = structPacket
     elif packetType == "TreeStatus":
         sender = structPacket["sender"]
-        nodeInfo = ensureNodeAddress(sender)
+        nodeInfo = ensureNodeAddress(sender, infoTable)
         nodeInfo["treeStatus"][structPacket["root"]] = structPacket
     elif packetType == "Color":
         sender = structPacket["sender"]
-        nodeInfo = ensureNodeAddress(sender)
+        nodeInfo = ensureNodeAddress(sender, infoTable)
         nodeInfo["lastColor"] = structPacket
     #print structPacket
 
@@ -210,30 +217,57 @@ def showOperaPacket(rawPacket, infoTable):
     elif strPacket.startswith("[Color"): selectColor("red")
     elif strPacket.startswith("[TreeS"): selectColor("high")
     print strPacket
+    recordOperaPacket(infoTable["timestamp"], structPacket)
     selectColor("normal")
     operaVolume += len(rawPacket)
     #print operaVolume
 
+
+MaxOperaPacketListSize = 9
+operaPacketList = []
+def recordOperaPacket(timestamp, structPacket):
+    global operaPacketList
+    packetVerbosity = 0
+    try:
+        strPacket = OperaPacketParse.reprPacket(structPacket, packetVerbosity)
+    except: 
+        return
+
+    fs = ' size="5"'
+    r = "%.6f " % timestamp
+    if strPacket.startswith("[Hello"): r += '<font color="blue"'+fs+'>'
+    elif strPacket.startswith("[STC"): r += '<font color="green"'+fs+'>' 
+    elif strPacket.startswith("[Color"): r += '<font color="red"'+fs+'>' 
+    elif strPacket.startswith("[TreeS"): r += '<font color="#CC6633"'+fs+'>'
+    r += strPacket
+    r += '</font>'
+    operaPacketList.append(r)
+    if len(operaPacketList) > MaxOperaPacketListSize:
+        operaPacketList.pop(0)
+    writeHtmlOperaPacket(operaPacketList)
+
+
 # CF 19eme octet de la trame. (12eme)
-
-
 lastWasBeacon = True
 def showBeaconPacket(timestamp, packetInfo):
-    global lastWasBeacon
+    global lastWasBeacon, option
+    if option.beaconMode == "none":
+        return
     beacon = packetInfo["beacon"]["payload"]
 
+    #packetInfo["timestamp"] = infoTable["timestamp"]
     if packetInfo["beacon"]["superframe"]["cpan"]:
         print "-"*70
-        selectColor("high")
-    else: selectColor("normal")    
+        #selectColor("high")
+    else: pass #selectColor("normal")
     sys.stdout.write("%.6f" % timestamp)
-
 
     sys.stdout.write(" beacon")
     if packetInfo["src"] != None:
         panId, address = packetInfo["src"]
-        sys.stdout.write(OcariPacketParse.reprAddress(address) 
-                         + "(%04x)" % panId)
+        try: panStr = "(%04x)" % panId
+        except: panStr = "()"
+        sys.stdout.write(OcariPacketParse.reprAddress(address) + panStr)
         coordStr = ",".join([OcariPacketParse.reprAddress(address)
                              for address in beacon["coord-address-list"]])
         sys.stdout.write(" #%s coord=%s cycle=%sms" %
@@ -241,24 +275,27 @@ def showBeaconPacket(timestamp, packetInfo):
                           coordStr, #beacon["nb-coord"],
                           beacon["global-cycle-duration"]*0.32
                           ))
-    selectColor("normal")
-    if packetInfo["frame-control"]["ocari"]["coloring-mode"]:
-        selectColor("high")
-    else: selectColor("normal")    
+    if packetInfo["beacon"]["superframe"]["association-permit"]:
+        sys.stdout.write(" assoc")
     if packetInfo["beacon"]["superframe"]["cpan"]:
         sys.stdout.write("\n     -- ")
         if packetInfo["frame-control"]["ocari"]["coloring-mode"]:
+            selectColor("red")
             sys.stdout.write("coloring ")
-        sys.stdout.write("color-indic=%d"
-                         % packetInfo["frame-control"]["ocari"]["color-indication"])
-    #if packetInfo["frame-control"]["ocari"]["color-indication"]:
-    #    sys.stdout.write(" use-color")
+            selectColor("normal")
+        sys.stdout.write( "color-indic=%d" 
+            % packetInfo["frame-control"]["ocari"]["color-indication"])
+
     sys.stdout.write(" " + packetInfo["beacon"]["payload"]["unparsed"]
                      + "\n")
-    if packetInfo["beacon"]["superframe"]["cpan"]:
+    if ((option.beaconMode == "cpan" 
+         and packetInfo["beacon"]["superframe"]["cpan"])
+        or option.beaconMode == "full"):
         pprint.pprint(packetInfo)
     lastWasBeacon = True
+    #pprint.pprint(packetInfo)
     #sys.stdout.write("\n")
+
 
 def eventNewSuperframe(timestamp, packetInfo):
     global frameAnalysis
@@ -267,7 +304,7 @@ def eventNewSuperframe(timestamp, packetInfo):
 
 
 def showZigbeePacket(packetIndex, timestamp, packet, infoTable, packetInfo):
-    global lastWasBeacon
+    global lastWasBeacon, option
     if lastWasBeacon: print
     lastWasBeacon = False
     if packetInfo["dst"] == None: return
@@ -288,12 +325,71 @@ def showZigbeePacket(packetIndex, timestamp, packet, infoTable, packetInfo):
     if "src-long" in zigbeePayload and zigbeePayload["src-long"] != None:
         srcLong = "%016x" % struct.unpack("Q",zigbeePayload["src-long"])
         srcLong = ".."+srcLong[-6:]
-        sys.stdout.write(srcLong)
+        if not option.shortDisplay:
+            sys.stdout.write(srcLong)
     srcShort = struct.unpack("H",zigbeePayload["src"])[0]
     dstShort = struct.unpack("H",zigbeePayload["dst"])[0]
-    sys.stdout.write("(%04x->%04x)" % (srcShort, dstShort))
+    if not option.shortDisplay:
+        sys.stdout.write("(%04x->%04x)" % (srcShort, dstShort))
+        sys.stdout.write(" -- ")
+    showOperaPacket(data[2:packetLen+2], infoTable, packetInfo)    
+    if not option.shortDisplay: print
+
+def showMacCommandPacket(packetIndex, timestamp, packet, infoTable, packetInfo):
+    sys.stdout.write("%.6f " % timestamp)
+    frameControl = packetInfo["frame-control"]
+    selectColor("red")
+    srcLong,srcShort,dstLong,dstShort = None, None, None, None
+    if frameControl["src-address-mode"] == "long":
+        srcLong = "%016x" % struct.unpack("Q",packetInfo["src"][1])[0]
+        srcLong = ".."+srcLong[-6:]
+        sys.stdout.write(srcLong)
+    elif frameControl["src-address-mode"] == "short":
+        srcShort = struct.unpack("H",packetInfo["src"][1])[0]
+        sys.stdout.write("%04x" % srcShort)
+    else: sys.stdout.write("*")
+    if frameControl["dst-address-mode"] == "long":
+        dstLong = "%016x" % struct.unpack("Q",packetInfo["dst"][1])[0]
+        dstLong = ".."+dstLong[-6:]
+        sys.stdout.write("->"+dstLong)
+    elif frameControl["dst-address-mode"] == "short":
+        dstShort = struct.unpack("H",packetInfo["dst"][1])[0]
+
     sys.stdout.write(" -- ")
-    showOperaPacket(data[2:packetLen+2], infoTable)
+
+    if "association" not in infoTable:
+        infoTable["association"] = {}
+    command = packetInfo["MAC-command"]["command"]
+    if command == "association-request":
+        if dstShort != None: dstStr = "%04x" % dstShort
+        else: dstStr = ""
+        sys.stdout.write("association-request >>>> %s\n" % dstStr)
+        if srcLong not in infoTable["association"]:
+            infoTable["association"][srcLong] = { "request": [],
+                                                  "response": [] }
+        assocReq = { "dstShort": dstShort, "timestamp": timestamp }
+        infoTable["association"][srcLong]["request"].append(assocReq)
+        #print assocReq
+    elif command == "beacon-request":
+        sys.stdout.write("beacon-request\n")
+    elif command == "association-response":
+        srcShort = struct.unpack("H",packetInfo["MAC-command"]["address"])[0]
+        sys.stdout.write("association-response %s addr=%04x\n" %
+                         (packetInfo["MAC-command"]["status"], srcShort))
+        if dstLong not in infoTable["association"]:
+            infoTable["association"][dstLong] = { "request": [],
+                                                  "response": [] }
+        assocResp = { "address": srcShort, 
+                      "srcLong": srcLong,
+                      "timestamp": timestamp }
+        infoTable["association"][dstLong]["response"].append(assocResp)
+        #pprint.pprint(packetInfo)
+    else:
+        sys.stdout.write("MAC-command=%s payload=%s" 
+                         % (command, packetInfo["MAC-command"]["payload"]))
+
+    selectColor("normal")
+    #pprint.pprint(packetInfo)
     print
 
 #def showBeaconPacket(packetIndex, timestamp, packet, infoTable, packetInfo):
@@ -331,7 +427,15 @@ def rawShowPacket(packetIndex, timestamp, packet, infoTable):
         showZigbeePacket(packetIndex, timestamp, packet, infoTable, packetInfo)
     elif "beacon" in packetInfo:
         showBeaconPacket(timestamp, packetInfo)
-
+        if "beacon" not in infoTable:
+            infoTable["beacon"] = {}
+        packetInfo["timestamp"] = timestamp
+        if len(packetInfo["src"][1]) == 2:
+            srcShort = struct.unpack("H",packetInfo["src"][1])[0]
+            infoTable["beacon"][srcShort] = packetInfo
+    elif "MAC-command" in packetInfo:
+        showMacCommandPacket(packetIndex, timestamp, packet, 
+                             infoTable, packetInfo)
 
 def scapyShowPacket(packet, packetCount, optionTable, infoTable):
     ### Scapy-related functions:
@@ -380,7 +484,7 @@ def scapyShowPacket(packet, packetCount, optionTable, infoTable):
         rawPacket = scapyPacket.data[1:1+size]
         if optionTable.verbose: print
         print "  --",
-        showOperaPacket(rawPacket, infoTable)
+        showOperaPacket(rawPacket, infoTable, {})
 
     if not optionTable.onlyOpera: print
     #print packetIndex, timestamp, d
@@ -469,16 +573,21 @@ class PacketPcap:
 
 def setColorSeq(displayMode):
     global CSI, DCnorm, DCblue, DCgreen, DCred, DChigh
-    if sys.platform in ["linux2"] and displayMode == "ansi":
+    if sys.platform in ["linux2", "darwin"] and displayMode == "ansi":
         # http://en.wikipedia.org/wiki/ANSI_escape_code
         CSI = '\033'
         DCnorm = CSI + "[0m"
-        DCblue = CSI + "[34m"
-        DCgreen = CSI + "[32m"
-        DCred = CSI + "[31m"
-        DChigh = CSI + "[34m" + CSI + "[43m"
+        DCblue = CSI + "[1m" + CSI + "[34m"
+        DCgreen = CSI + "[1m" + CSI + "[32m"
+        DCred = CSI + "[1m" + CSI + "[31m"
+        DChigh = CSI + "[1m" + CSI + "[34m" #+ CSI + "[43m"
         #DCreset = CSI'[0m'
         #print CSI + "[34m"
+        
+        DCgreen = CSI + "[1m" + CSI + "[34m"
+        DCblue = CSI + "[1m" + CSI + "[32m"
+
+
     elif displayMode == "html":
         DCnorm =  '</font>'
         DCblue =  '<font color="blue">' 
@@ -501,6 +610,8 @@ parser.add_option("-x", "--hex-dump",
                   dest = "withHexDump", action="store_true", default=False)
 parser.add_option("--no-color", dest = "displayMode", action="store_const", 
                   const = None, default="ansi")
+parser.add_option("--beacon", dest = "beaconMode", action="store",
+                  const = None, default="summary")
 parser.add_option("--html", dest = "displayMode", action="store_const", 
                   const = "html")
 parser.add_option("-n", "--network", "--opera",
@@ -519,9 +630,14 @@ parser.add_option("--table-interval", type="float",
 #                  dest = "port", type="int", default=0)
 parser.add_option("--table-all",
                   dest = "withTableAll", action="store_true", default=False)
+parser.add_option("--short",
+                  dest = "shortDisplay", action="store_true", default=False)
 
 (optionTable, argList) = parser.parse_args()
 option = optionTable
+
+if option.shortDisplay:
+    option.beaconMode = "none"
 
 setColorSeq(optionTable.displayMode)
 
@@ -530,18 +646,38 @@ if optionTable.displayMode == "html":
 
 #--------------------------------------------------
 
-def writeTable(prefixName, infoTable):
-    data = repr(infoTable)
-
-    tmpFileName = prefixName + ".pydata-next"
-    fileName = prefixName + ".pydata"
+def rewriteFile(fileName, content):
+    tmpFileName = fileName + "-tmp-next"
     g = open(tmpFileName, "wb")
-    g.write(data)
+    g.write(content)
     g.close()
     if sys.platform == "win32":
         try: os.remove(fileName)
         except: pass
     os.rename(tmpFileName, fileName)
+
+def writeTable(prefixName, infoTable):
+    data = repr(infoTable)
+    rewriteFile(prefixName + ".pydata", data)
+
+def writeHtmlOperaPacket(operaPacketList):
+    global optionTable
+    if optionTable.displayMode == "html": return
+    refreshTime = 0.1
+    #htmlLastPacket = XXX;
+    htmlLastPacket = "<br>".join(operaPacketList)
+    r = '''<html><head><META http-equiv="Refresh" content="%s"></head>
+         <body>%s</body></html>''' % (refreshTime, htmlLastPacket)
+
+    r2 = '''<html><head></head>
+         <body>%s</body></html>''' % (htmlLastPacket,)
+
+    fileName = stateDir+"/last-packet.html"
+    rewriteFile(fileName, r)
+
+    fileName2 = stateDir+"/last-packet-no-refresh.html"
+    rewriteFile(fileName, r2)
+
 
 #--------------------------------------------------
 
@@ -592,28 +728,41 @@ class MyLog:
         self.content = ""
         return result
 
-#oldStdout = sys.stdout
-#sys.stdout = MyLog()
+if option.tableInterval != None:
+    oldStdout = sys.stdout
+    sys.stdout = MyLog()
+    sys.stderr = sys.stdout
 
 #--------------------------------------------------
 
 infoTable = { "timestamp": 0 }
 packetCount = 0
 lastTimeStampWrite = None
+lastTimeStamp = None
 
 frameAnalysis = OcariPacketParse.FrameAnalysis(eventNewSuperframe)
 
+writeHtmlOperaPacket([])
+
 timeIndex = 0
+offset = 0
+
 while True:
     packetIndex, timestamp, packet, fcs = capture.getPacket()
     #displayPacket(packetIndex, timestamp, packet)
     if packetIndex == None: 
         break
 
+    timestamp += offset
+    if lastTimeStamp != None and timestamp < lastTimeStamp:
+        offset += (lastTimeStamp - timestamp)
+        timestamp = lastTimeStamp
+    lastTimeStamp = timestamp
+
     if lastTimeStampWrite == None or timestamp < lastTimeStampWrite:
         lastTimeStampWrite = timestamp
 
-    if True:
+    if option.tableInterval == None:
         if lastTimeStampWrite > timestamp: 
             lastTimeStampWrite = timestamp
         if (option.tablePrefix != None 
@@ -628,11 +777,7 @@ while True:
                 prefix += ".%06d" % packetIndex
             writeTable(prefix , infoTable)
 
-
-    if False and option.tablePrefix != None:
-        assert option.tablePrefix != None
-        assert option.tableInterval != None 
-
+    if (option.tableInterval != None and option.tablePrefix != None):
         while timestamp-lastTimeStampWrite > option.tableInterval:
             timeIndex += 1
             prefix = option.tablePrefix
@@ -665,8 +810,11 @@ while True:
 
 #---------------------------------------------------------------------------
 
+print "(end of trace)"
+
 if optionTable.displayMode == "html":
     print "</pre></html>"
+
 
 #---------------------------------------------------------------------------
 

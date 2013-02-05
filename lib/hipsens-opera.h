@@ -156,15 +156,21 @@ typedef struct s_opera_state_t {
   /* number of packet sent during the frame */
   int cycle_transmit_count; /* XXX:should be only when WITH_FRAME defined */
 
-  hipsens_bool flag_use_colored_slots :1; /**< note: set in MACARI beacon */
-  hipsens_bool flag_run_serena        :1; /**< note: set in MACARI beacon */
-  hipsens_bool flag_new_color_trigger :1; /**< note: set in MACARI beacon */
+  //hipsens_bool flag_use_colored_slots :1; /**< note: set in MACARI beacon */
+  //hipsens_bool flag_run_serena        :1; /**< note: set in MACARI beacon */
+  //hipsens_bool flag_new_color_trigger :1; /**< note: set in MACARI beacon */
+
+  hipsens_bool has_set_color :1; /**< was coloring finished ? */
+
+  //hipsens_bool should_
 
   /* those may be set externally: */
   hipsens_bool should_start_serena :1; /**<  */
   hipsens_bool is_blocked          :1; /**<  */
   hipsens_bool should_be_reset     :1; /**< is opera frozen (no processing) */
   hipsens_bool should_inc_colored_tree_seq :1; /**< triggers recoloring */
+  hipsens_bool should_stop_stc_generation :1; /**< stop STC */
+
     
 #ifdef WITH_OPERA_ADDRESS_FILTER
 #define MAX_FILTER_ADDRESS 3
