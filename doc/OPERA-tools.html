@@ -1,0 +1,370 @@
+<html>
+<title>Tools for OPERA</title>
+
+<body>
+
+<center>
+</center>
+
+
+<hr>
+
+<h1>Tools for OPERA</h1>
+
+This is the documentation for
+<ul>
+<li>TkModuleManagement.py</li>
+<li>PacketAnalysis.py</li>
+<li>NetworkAnalysis.py</li>
+</ul>
+
+<hr>
+
+<h1>Installation</h1>
+
+The tools are written in Python and some of them require external software:
+<ul>
+<li>A version <strong>2.x</strong> of the language Python (<strong>not 3.x</strong>); <a href="http://www.python.org/download/releases/">see the latest 2.x version</a>.<br> The module was tested on 
+Windows XP with 
+<a href="http://www.python.org/download/releases/2.7.2/">Python 2.7.2</a>,
+with the Windows MSI Installer 
+(<a href="http://www.python.org/ftp/python/2.7.2/python-2.7.2.msi">Python 2.7.2 (32 bits)</a> or 
+<a href="http://www.python.org/ftp/python/2.7.2/python-2.7.2.amd64.msi">Python 2.7.2 (64 bits) [untested]</a>)
+<li>A version of <a href="http://pyserial.sourceforge.net/">PySerial</a>, a Python module which allows 
+cross-platform access to the serial port.<br>
+The module was tested on Windows XP with version 2.5 and the MS Windows
+installer (<a href=http://pypi.python.org/packages/any/p/pyserial/pyserial-2.5.win32.exe>pyserial-2.5.win32.exe</a>).
+
+<li>A version of <a href="http://www.graphviz.org/Download_windows.php">Graphviz</a>. This module was tested on Windows XP with
+<a href="http://www.graphviz.org/pub/graphviz/stable/windows/graphviz-2.28.0.msi">version 2.28.0 and MSI installer</a>.
+
+</li>
+</ul>
+
+<hr>
+
+<h1>TkModuleManagement.py</h1>
+
+(requires: Python 2.x, PySerial)
+
+<p>
+The module sends commands to the serial port, and displays the output.<br>
+It is a very simplified equivalent of ZTC for OPERA commands.<br>
+
+<h2>Command line mode</h2>
+Internally, TkModuleManagement.py is built on a command line mode, so that 
+for any button clicked there is an equivalent command line.<br>
+For instance, the button "[1] DeviceInfo" is equivalent to 
+<pre>python ModuleManagement.py device-info --port 1</pre>
+The equivalent command line is displayed in the GUI when starting a command
+from the button; it is the part displayed after "<tt>** running:</tt>"
+
+<h2>GUI mode</h2>
+
+Double click on the program <tt>TkModuleManagement.py</tt>
+(alternatively: edit with IDLE editor [installed with Python], and 
+press "F5" [Run Module])
+
+<p>
+On the right of the GUI, the buttons are organized in a grid, 
+which are used to perform
+commands. The area of the left, the <em>output area</em>, displays
+results of commands.</p>
+
+<p>
+The first row of buttons consists:
+<ul>
+<li>QUIT: quit the application</li>
+<li>Clear: clear the output area</li>
+<li>AutoClear: clear the output area before running any command</li>
+<li>verbose: also display the actual codes (bytes) send to and received from
+the serial port (as ZTC).</li>
+</ul>
+</p>
+
+The rest of the grid is organized with:
+<p>
+<ul><li>Each column corresponds to a serial port index. The serial port
+is specified in the beginning of the button: "[all]" indicates
+that the command should be run on all the detected serial ports ; "[1]"
+on the serial port number 1, "[2]" on serial port number 2 etc.</li>
+<li>Upon starting, the program scans ports 0 to 9, to see which ones are
+available, and for every (that can be opened), a  row is created.
+</ul>
+<p>
+
+The list of commands associated to each node are:<br>
+<em>Generic Module Commands</em>
+<ul>
+  <li><tt>HayesMode</tt>:<br>switch the serial port of the module to 
+Hayes Mode,
+<strong>this must be made before sending any other command</strong> 
+(and also after soft/hard reset (?))
+  </li>
+  <li><tt>DeviceInfo</tt>:<br>
+get device information: IEEE MAC address and device type
+  </li>
+  <li><tt>Assoc.</tt>:<br>
+check if node is associated and get short address
+  </li>
+  <li><tt>Flush</tt>:<br>
+write all the output of the serial port 
+  </li>
+  <li><tt>Dump</tt>:<br>
+get information of some of configuration (from Telit ZigBee module doc)
+  </li>
+  <li><tt>Start</tt>:<br>
+start networking (XXX: not working?)
+  </li>
+  <li><tt>Soft Reset</tt>:<br>
+perform a soft-reset of the node (XXX: not working?); use 'HayesMode' afterwise
+  </li>
+  <li><tt>Hard Reset</tt>:<br>
+perform a hard-reset of the node  (XXX: not working?); use 'HayesMode' afterwise
+  </li>
+</ul>
+
+<em>OPERA commands</em>
+<ul>
+  <li><tt>EOND Start</tt>:<br>
+start sending periodic Hello message (i.e. start EOLSR Neighbor Discovery)
+  </li>
+  <li><tt>[!]STC</tt>:<br>
+start sending periodic STC as root of a non-colored, 
+used for routing [not tested yet]
+  </li>
+  <li><tt>[!!!]ColSTC</tt>:<br>
+start sending STC as <strong>root of the colored tree</strong>,
+used for routing. <strong>This is the way to start SERENA</strong>, in
+several phases: first the tree which will be colored by SERENA is built; 
+after it is stable, the "stability" information is propagated to the root;
+then SERENA is started.
+  </li>
+  <li><tt>[!!!]IncSTC</tt>:<br>
+increment STC tree sequence number. <strong>This is the way to 
+restart coloring</strong>. This works only on the root of a colored tree.
+  </li>
+  <li><tt>RootTreeSeq</tt>:<br>
+displays information of tree of which this node is root: 
+    <ul><li>the tree mode
+        <ul> 
+        <li>0x00: node is not root of any tree, </li>
+        <li>0x01: root of a non-colored tree</li>
+        <li>0x02: root of a colored tree</li>
+        </ul></li>
+        <li>and the associated tree sequence number.</li>
+    </ul>
+  </li>
+</ul>
+
+
+<em>OPERA filtering:</em> at the "Hello" level, OPERA can ignore packets
+based on some filters
+<ul>
+  <li><tt>No Filter</tt>:<br>
+remove existing filter, if there is one
+</li>
+  <li><tt>Filt. Only X</tt>:<br>
+accept Hello messages only from node with address <tt>X</tt> (X=0,1,2 in the GUI).
+This removes previous filter if there is one.
+  <li><tt>Filt. No X</tt>:<br>
+reject Hello messages from node with address <tt>X</tt> (X=0,1,2 in the GUI).
+This removes previous filter if there is one.
+</li>
+</ul>
+
+(note: RTS/CTS is disabled on Windows because it blocks the program when
+trying to write/read from a non-connected serial port)
+
+<h2>Normal use of the GUI</h2>
+
+The usual way to use the GUI is as follows.
+
+Ensure serial connection is working (this can be done better by ZTC):
+<ul>
+<li>start with "HayesMode"</li>
+<li>check the module is connected and alive with: "DeviceInfo". 
+If there is a problem, switch to "verbose" mode to diagnose, maybe try
+"Flush" first, and then "HayesMode"/"DeviceInfo" again</li>
+<li>once the module answers properly, one knows if it is CPAN or router,
+and what is the address. 
+<li>then check the association information with "Assoc.". It should 
+be "True", for the CPAN if it is started, for a router if it is associated. 
+</ul>
+Once everything is ok, it is possible to start OPERA submodules:
+<ul>
+<li>starting EOND with button [EOND start]: this starts the Hello messages on the node, 
+by setting the "delay time before starting Hellos" to 0. In current
+implementation+compilation options, a node which receives a Hello message,
+starts sending Hello messages.</li>
+<li>immediately, or after, the construction of the colored tree, and
+the coloring itself can be performed. This is done with: the button 
+"[!!!]ColSTC" on the CPAN:
+  <ul>
+  <li>the CPAN will start sending STC messages with the flag indicating
+     that they should be colored</li>
+  <li>the STC messages will construct a tree</li>
+  <li>once the stability information gets its way back to the root
+      the CPAN will start coloring and running SERENA</li>
+  </ul>
+</li>
+<li>It is possible to check that a tree was created by "RootTreeSeq" (see above).
+</ul>
+Later it is possible to start recoloring:
+<ul>
+<li>the button "[!!!]IncSTC" indeed increases the "tree sequence number"
+of the node, and as a result, this will restart the coloring.</li>
+</ul>
+
+
+Some tips:
+<ul>
+<li>Because OPERA serial communication sometimes loses messages,
+the module automatically re-transmits some commands several times until 
+a timeout (~3 sec). As a result, for instance, using "HayesMode"
+ on an unconnected interface, results in a delay, before the exception
+is shown.
+In the output window, every time there is a timeout there is a "@" displayed,
+and/or an exception</li>
+<li>all OPERA commands should return a result code  
+(a code  >= 0xf0 is generally some kind of error)</li>
+</ul>
+
+<h1>Spec: Serial Protocol for OPERA</h1>
+
+See at the end of <tt>hipsens-opera.c</tt>.
+
+The general format of a command is similar to ZStack commands, as follows
+ (XXX: double check):
+<pre>
+[cmd size (1 byte)] [opera = 0xfe (1 byte)] [opera cmd code (1 byte)] [...] 
+</pre>
+the reply is 
+<pre>
+[reply size (1 byte)] [... reply content ...]
+</pre>
+
+<hr>
+
+<h1>ForwardPacketCapture.py</h1>
+
+(requires: Python 2.x)
+
+<p>
+ This program forwards the packets received on a port to another port.<br>
+The goal of the program is to forwards packet received from the 
+<tt>TI Packet Sniffer</tt> to another machine. This is specially useful when the
+code is run in a guest Windows virtual machine, and the packet processing is
+made on the Linux host.<br>
+  The program also dumps the packets as hexadecimal bytes.
+<p>
+
+<hr>
+<h1>PacketAnalysis.py</h1>
+
+(requires: Python 2.x)
+
+<p>
+This program performs basic packet analysis (for OPERA).
+</p>
+<p>
+It has two modes of input:
+<ul>
+<li>Live: listen to a given UDP port and receive packets (directly from 
+<tt>TI Packet Sniffer</tt>, or indirectly from <tt>ForwardPacketCapture</tt>).
+In addition, in <em>Live</em> mode, the program writes them in a file 
+in the PCAP format (for wireshark for instance).
+</li>
+<li>Read: read packets from a given log file in PCAP format.</li>
+</ul>
+</p>
+
+The program is then used to output:
+<ul>
+<li>Display: show a parsing of the packets received for OPERA packets</li>
+<li>Record network state: write the captured packets (of each kind) of each
+nodes, in a temporary file (in Linux <strong>not yet implemented for Windows</strong>).
+</li>
+</ul>
+
+</p>
+
+
+<h2>How to run</h2>
+
+<p>
+The program requires the <tt>TI Packet Sniffer</tt> running in "broadcast"
+mode. This is enabled by launching the Sniffer window, then going in the menu
+<tt>Settings</tt>, then <tt>Packet broadcast ...</tt>, then selecting
+the  "Broadcast enable" check box. The address should be left as
+<tt>127.0.0.255</tt> (any 127.xx.xx.xx address) and the port must
+ be <tt>5000</tt>.
+</p>
+<p>
+Once the <tt>TI Packet Sniffer</tt> is started, the program can be run on
+Windows by double-clicking on <tt>PacketAnalysis.py</tt>. By default, it
+will:
+<ul>
+<li>Display the parsed OPERA packets</li>
+<li>Store the capture as PCAP format in a file 
+'ocari-packet-YYYY-MM-DD--HHhMMmSS.log' in the current directory</li>
+<li>Store the current state (last captured OPERA packets) 
+in a temporary directory (displayed at the start of the program):
+  <ul>
+  <li><tt>current-packet.pydata</tt></li>
+  </ul>
+
+</li>
+</ul>
+</p>
+
+<hr>
+
+<h1>NetworkAnalysis.py</h1>
+
+(requires: Python 2.x, Graphviz)
+
+<p>
+This program uses data saved by PacketAnalysis.py to display the
+OPERA topology 
+</p>
+
+<h2>How to run</h2>
+<p>
+The program requires that <tt>PacketAnalysis.py</tt> runs, because it
+uses its outputs.
+
+<ul>
+<li>In practice, <tt>PacketAnalysis.py</tt> writes in temporary
+user directory, the recorded packets of each kind for OPERA for each
+node in a file (periodically or at each packet). 
+</li>
+<li>Periodically, NetworkAnalysis.py reads this information from the file,
+then construct a graph representation, stores in the "Graphviz" (dot)
+file format and call the program 'dot.exe'. "dot.exe" then creates
+a png file</li>
+<li>At the same time, NetworkAnalysis.py writes a .html file
+(with time and a link to this png file), which includes a refresh tag</li>
+<li>If opened by a browser this displays the topology as png image. 
+NetworkAnalysis.py, at the start, in fact, uses python libraries to
+start a webbrowser opening this very page.
+</li>
+</ul>
+
+</p>
+
+
+<hr>
+
+<h1>Document Version</h1>
+  Version 1.0.2 of this document<br>
+<font size="0">
+<pre>
+       Cedric Adjih, Hipercom Project-Team, INRIA Rocquencourt
+  Copyright 2011 Institut National de Recherche en Informatique et
+  en Automatique.  All rights reserved.  Distributed only with permission.
+</pre>
+</font>
+
+</body>
+</html>
