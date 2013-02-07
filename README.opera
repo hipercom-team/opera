@@ -1,0 +1,95 @@
+===========================================================================
+ OPERA, "OPtimized Energy efficient Routing and node Activity scheduling"
+-- README v1.0 --
+===========================================================================
+
+What is OPERA?
+--------------
+OPERA is part of the stack OCARI for Wireless Sensor Networks.
+
+What is OCARI?
+--------------
+OCARI is a communication protocol for Industrial Wireless Sensor
+Network. It was developed by the following consortium during the OCARI
+project that is funded by the French National Research Agency (ANR)
+(http://ocari.org/), with the following partners:
+DNCS, EDF (project leader), Inria, LATTIS, LIMOS, LRI, Telit-RF Technologies
+
+The implementation (demonstrated on the 8th december 2011) is based on 
+802.15.4, and on ZigBee mechanisms and application interface.
+
+Among other things, OCARI includes:
+- a deterministic access method to the RF medium: MaCARI
+- a proactive energy efficient routing protocol: EOLSR
+- an activity scheduling mechanism based on three-hop coloring algorithm
+  which helps to reduce interference, (O)SERENA
+
+OPERA is the part EOLSR + OSERENA designed by Inria.
+
+What is this OPERA code?
+------------------------
+This OPERA code is part of the code of OCARI (demonstrated on the 8th
+december 2011, and deposed at APP).
+The git versions are tagged as:
+
+- OCARI-demo-2011-12-08 (git checkout OCARI-demo-2011-12-08):
+  Release of the OPERA code used for the OCARI Demo of 8 december 2011
+  (the final integration+modification was done on the 7 dec 2011, so
+   a few last minute changes might not be there. the code had been compiled
+   on another machine).
+
+- OPERA-APP-2011-12-21 (git checkout OPERA-APP-2011-12-21):
+  This version of OPERA/OCARI has the files updated to the "Depot APP" version.
+  Maybe was not tested on actual equipment of the Demo 2011/12/08, see 
+  previous version from the git repository for the one used then.
+
+- the current version is same as OPERA-APP.
+
+What is the LICENSE?
+--------------------
+
+This code is copyright Inria.
+This version of the code is released under the LGPL version 3 (or later),
+see file LICENSE.LGPLv3
+
+What are the authors?
+---------------------
+
+Members of the Hipercom project-team in Inria developped OPERA.
+The following persons participed to the design, specification and 
+implementations of OPERA:
+- Pascale Minet
+- Saoucene Mahfoudh
+- Ichrak Amdouni
+- Cedric Adjih
+- Ridha Soua
+
+How to use it?
+--------------
+
+The stack itself is not usable as is, since the rest of OCARI is not
+included in this released code.
+However the API is compact, and the code was initially developped entirely out
+of rest of OCARI (through a simulator), hence it is quite portable, and
+easy to integrate. 
+(it had been integrated in OCARI, in Contiki, in a home-made simulator)
+
+===========================================================================
+
+OPERA principles:
+
+OPERA provides an adaptive multi-hop routing supporting micro-mobility and 
+enables spatiotemporal reuse of channel capacity.
+
+OPERA consists in OSERENA and EOLSR:
+(a) OSERENA computes the colors of the nodes and also the
+  total number of colors max color. The total number of colors allows
+  MaCARI to dimension the cycle. Each color computed by OSERENA corresponds
+  to a time slot where nodes having this color can transmit.
+(b) EOLSR ensures neighborhood discovery and route construction. Indeed, 
+  EOLSR builds a routing tree rooted at the data sink. Selected routes
+  have the smallest energy cost. EOLSR consists in two modules: "EOND"
+  responsible of neighborhood discovery and "EOSTC" responsible for
+  routing tree construction.
+
+===========================================================================

@@ -1,0 +1,108 @@
+
+---------------------------------------------------------------------------
+
+OPERA General Message Format
+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Message Type  |  Message Size |         ... data  ...         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Message Type: 
+  0x48 'H' = Hello message
+  0x53 'S' = STC message
+  0x54 'T' = Tree Status message
+  0x43 'C' = Color message
+
+---------------------------------------------------------------------------
+
+EOLSR Neighbor Discovery, Hello message:
+
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Message Type  |  Message Size |       Originator Address      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Message Sequence Number      |    Vtime      | Energy Class  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Link Code     |Link Mess. Size| Neighbor Interface Address    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Neighbor Interface Address    | Neighbor Interface Address    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Neighbor Interface Address    | Neighbor Interface Address    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+<Message Size> does not include the field 'Message Type' nor 'Message Size'
+<Link Mess. Size> does not include the field 'Link Code' nor 'Link Mess. Size'
+
+
+<Vtime> is coded as in RFC 3626, but with a different base C
+  (due to time expressed in cycles)
+
+<Link Code>
+  0x01 = asymmetric neighbor addresses
+  0x02 = symmetric neighbor addresses  
+
+<Energy Class>
+  - Default set to ENERGY_CLASS_HIGH
+  - ENERGY_CLASS_LOW    = 0
+  - ENERGY_CLASS_MEDIUM = 1
+  - ENERGY_CLASS_HIGH   = 2
+
+---------------------------------------------------------------------------
+
+EOSTC, STC message
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Message Type  |  Message Size |         Sender Address        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Message Sequence Number     |   Strategic Node Address      |  
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Cost                        |   Parent Address              |  
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Vtime       |  Time To Live | Flags       | Tree Sequence...|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|... Number     |     
++-+-+-+-+-+-+-+-+
+
+---------------------------------------------------------------------------
+
+EOSTC, Tree Status message
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Message Type  |  Message Size |    Sender Address             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     Message Sequence Number   |    Strategic Node Address     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     Tree Sequence Number      |        Descendant Number      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Flags         |
++-+-+-+-+-+-+-+-+
+
+---------------------------------------------------------------------------
+
+Message Color Format
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Message Type  |  Message Size |    Sender Address             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Strategic Node Address      |     Tree Sequence Number      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Max Color     | Node Color    |   Priority    | Size Max2Prio1|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| N1 Priority   | N1 Address                    |     ......    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Size Max2Prio2| N2 Priority   | N2 Address                    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      ......                                                   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Size Bitmap1  | Bitmap of the 1-hop colors used     ....      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Size Bitmap2  | Bitmap of the 2-hop colors used     ....      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+---------------------------------------------------------------------------

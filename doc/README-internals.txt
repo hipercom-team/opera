@@ -1,33 +1,8 @@
-Notes with respect to the history
-
-History:
-. 30/03/2011, created this file at the same time as the "INRIA" branch
-  in git.
-  - added this file
-. 01/04/2011, started merging versions
-
 ---------------------------------------------------------------------------
-
-. Notes about Git
-
-- EOL (CR+LF) configuration
-  - tried to configure EOL (for Linux) ->>> but this is not working ?!
-      git config core.eol crlf 
-      git config core.safecrlf true
-    (info from: http://progit.org/book/ch7-1.html which describes 
-    core.autocrlf which does not do what we want, and 
-    http://www.kernel.org/pub/software/scm/git/docs/git-config.html
-    which describes core.eol)
-  - currently, 'todos' is used to convert files
-
-- To changes several (non-published) commits into one single commit for export:
-  http://stackoverflow.com/questions/2302736/trimming-git-checkins-squashing-git-history/
-  . git rebase -i <reference commit>
-  . -> indicate intermediary commits are 'squash'
-
-- To merge+squash, information:
-  http://stackoverflow.com/questions/1464642/git-merge-squash-repeatedly
-
+This file is part of the internal documentation for the OPERA part for the
+OCARI stack
+-- (original file 2011/03/30 - 2011/04/01 -- Cedric Adjih)
+Copyright Inria 2011-2013 - Part of OPERA distributed under LGPLv3 or later.
 ---------------------------------------------------------------------------
 
 . General comments about the files:
