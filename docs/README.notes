@@ -1,0 +1,1 @@
+2021/10/19: PerLog.zip was split with: split --bytes=50000000 PerLog.zip  PerLog.zip.

@@ -1,0 +1,129 @@
+<html>
+<body>
+<a href="state.0000063.html">&gt;&gt;</a>&nbsp;&nbsp;<a href="state.0000061.html">&lt;&lt;</a>&nbsp;&nbsp;<a href="../comment.html">IDX</a>&nbsp;&nbsp;<a href="state.0000001.html">[start]</a> <a href="state.0000042.html">-100</a> <a href="state.0000057.html">-25</a> <a href="state.0000061.html">-5</a> <a href="state.0000062.html">+0</a> <a href="state.0000063.html">+5</a> <a href="state.0000067.html">+25</a> <a href="state.0000082.html">+100</a><h1> [310.107089996] </h1><img src="image/state.0000062.png"><h2> Previous packets </h2><pre>----------------------------------------------------------------------
+305.131438 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc
+     -- color-indic=0 64 2c 82
+305.141595 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 bf b3
+305.151573 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 c5 fe
+305.161574 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 b2 14
+305.171573 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 c8 59
+305.181574 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 46 8e
+305.191574 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 3c c3
+305.201577 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 b9 52
+305.235667 <font color="green">[Hello(1): seq=141 sym=5,3,2,4 asym=8,6 sysInfo= stat=5:6,0,0,0/3:9,0,0,0/2:2,0,0,0/4:7,0,0,0/8:10,0,0,0/6:4,0,0,0]
+</font>
+----------------------------------------------------------------------
+305.919576 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc
+     -- color-indic=0 64 18 9a
+305.929750 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 8b ab
+305.939711 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 f1 e6
+305.949711 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 86 0c
+305.959711 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 fc 41
+305.969711 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 72 96
+305.979712 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 08 db
+305.989716 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 8d 4a
+306.034540 <font color="green">[Hello(5): seq=141 sym=1,2,7,6,3,8,4 sysInfo= stat=1:13,0,0,0/2:2,0,0,0/7:10,0,0,0/6:1,0,0,0/3:6,0,0,0/8:8,0,0,0/4:8,0,0,0]
+</font>
+306.056174 PARSE ERROR************************
+Traceback (most recent call last):
+  File "PacketAnalysis.py", line 167, in showOperaPacket
+    structPacket = OperaPacketParse.parsePacket(rawPacket)
+  File "/home/user/HgRep/OCARI-2014/Sniffer-OPERA/OperaPacketParse.py", line 461, in parsePacket
+    return parseHelloMessage(data)
+  File "/home/user/HgRep/OCARI-2014/Sniffer-OPERA/OperaPacketParse.py", line 125, in parseHelloMessage
+    struct.unpack("!H",linkList[:2])[0])
+error: unpack requires a string argument of length 2
+    48 2c 08 00 00 8d 00 02 02 0e 02 00 07 00 05 00 06 00 03 00 04 00 0a 00 53 04 00 00 00 00 4c 0e 00 05 00 0e 00 0d 00 08 00 0a 00 05 00 02 4d 73
+
+306.061921 <font color="green">[Hello(6): seq=141 sym=10,7,5,3,8,4,2,9 sysInfo= stat=10:10,0,0,0/7:13,0,0,0/5:2,0,0,0/3:13,0,0,0/8:10,0,0,0/4:3,0,0,0/2:10,0,0,0/9:6,0,0,0]
+</font>
+306.088274 <font color="green">[Hello(7): seq=141 sym=10,5,6,8,3,2,4,9 sysInfo= stat=10:8,0,0,0/5:14,0,0,0/6:9,0,0,0/8:12,0,0,0/3:5,0,0,0/2:8,0,0,0/4:3,0,0,0/9:13,0,0,0]
+</font>
+306.105919 <font color="green">[Hello(3): seq=141 sym=1,2,7,5,6,8,4 sysInfo= stat=1:13,0,0,0/2:3,0,0,0/7:8,0,0,0/5:6,0,0,0/6:0,0,0,0/8:9,0,0,0/4:9,0,0,0]
+</font>
+306.127264 <font color="green">[Hello(2): seq=141 sym=1,7,5,3,8,4,6 sysInfo= stat=1:12,0,0,0/7:7,0,0,0/5:6,0,0,0/3:6,0,0,0/8:9,0,0,0/4:5,0,0,0/6:10,0,0,0]
+</font>
+306.156881 <font color="green">[Hello(4): seq=141 sym=1,2,5,6,3,8,7 sysInfo= stat=1:12,0,0,0/2:6,0,0,0/5:8,0,0,0/6:0,0,0,0/3:9,0,0,0/8:8,0,0,0/7:14,0,0,0]
+</font>
+----------------------------------------------------------------------
+306.707713 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc
+     -- color-indic=0 64 a4 9f
+306.717876 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 37 ae
+306.727848 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 4d e3
+306.737849 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 3a 09
+306.747849 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 40 44
+306.757849 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 ce 93
+306.767849 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 b4 de
+306.777854 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 31 4f
+306.823954 <font color="green">[Hello(1): seq=142 sym=5,3,2,4 asym=8,6 sysInfo= stat=5:6,0,0,0/3:10,0,0,0/2:3,0,0,0/4:8,0,0,0/8:11,0,0,0/6:5,0,0,0]
+</font>
+----------------------------------------------------------------------
+307.495850 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc
+     -- color-indic=0 64 60 91
+307.505998 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 f3 a0
+307.515985 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 89 ed
+307.525985 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 fe 07
+307.535985 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 84 4a
+307.545987 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 0a 9d
+307.555986 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 70 d0
+307.565990 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 f5 41
+307.619511 <font color="green">[Hello(4): seq=142 sym=1,2,5,6,3,8,7 sysInfo= stat=1:13,0,0,0/2:6,0,0,0/5:8,0,0,0/6:0,0,0,0/3:9,0,0,0/8:8,0,0,0/7:14,0,0,0]
+</font>
+307.627557 <font color="green">[Hello(5): seq=142 sym=1,2,7,6,3,8,4 sysInfo= stat=1:14,0,0,0/2:3,0,0,0/7:11,0,0,0/6:2,0,0,0/3:7,0,0,0/8:9,0,0,0/4:10,0,0,0]
+</font>
+307.661520 <font color="green">[Hello(3): seq=142 sym=1,2,7,5,6,8,4 sysInfo= stat=1:14,0,0,0/2:4,0,0,0/7:8,0,0,0/5:7,0,0,0/6:0,0,0,0/8:9,0,0,0/4:11,0,0,0]
+</font>
+307.665248 <font color="green">[Hello(7): seq=142 sym=10,5,6,8,3,2,4,9 sysInfo= stat=10:9,0,0,0/5:15,0,0,0/6:9,0,0,0/8:12,0,0,0/3:6,0,0,0/2:8,0,0,0/4:5,0,0,0/9:13,0,0,0]
+</font>
+307.670212 <font color="green">[Hello(2): seq=142 sym=1,7,5,3,8,4,6 sysInfo= stat=1:13,0,0,0/7:8,0,0,0/5:7,0,0,0/3:7,0,0,0/8:9,0,0,0/4:7,0,0,0/6:10,0,0,0]
+</font>
+307.680463 <font color="green">[Hello(8): seq=142 sym=2,7,5,6,3,4,10 sysInfo= stat=2:7,0,0,0/7:0,0,0,0/5:14,0,0,0/6:9,0,0,0/3:12,0,0,0/4:7,0,0,0/10:3,0,0,0]
+</font>
+307.711552 <font color="green">[Hello(6): seq=142 sym=10,7,5,3,8,4,2,9 asym= sysInfo= stat=10:11,0,0,0/7:15,0,0,0/5:3,0,0,0/3:15,0,0,0/8:11,0,0,0/4:5,0,0,0/2:11,0,0,0/9:7,0,0,0]
+</font>
+----------------------------------------------------------------------
+308.283986 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc
+     -- color-indic=0 64 dc 94
+308.294144 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 4f a5
+308.304121 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 35 e8
+308.314121 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 42 02
+308.324122 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 38 4f
+308.334122 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 b6 98
+308.344122 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 cc d5
+308.354126 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 49 44
+308.524184 <font color="green">[Hello(1): seq=143 sym=5,3,2,4 asym=8,6 sysInfo= stat=5:7,0,0,0/3:11,0,0,0/2:4,0,0,0/4:9,0,0,0/8:12,0,0,0/6:6,0,0,0]
+</font>
+----------------------------------------------------------------------
+309.072122 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc
+     -- color-indic=0 64 c8 fa
+309.082291 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 5b cb
+309.092257 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 21 86
+309.102258 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 56 6c
+309.112259 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 2c 21
+309.132259 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 d8 bb
+309.142262 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 5d 2a
+309.197534 <font color="green">[Hello(2): seq=143 sym=1,7,5,3,8,4,6 sysInfo= stat=1:14,0,0,0/7:8,0,0,0/5:7,0,0,0/3:7,0,0,0/8:10,0,0,0/4:7,0,0,0/6:11,0,0,0]
+</font>
+309.202338 <font color="green">[Hello(4): seq=143 sym=1,2,5,6,3,8,7 sysInfo= stat=1:14,0,0,0/2:7,0,0,0/5:9,0,0,0/6:1,0,0,0/3:10,0,0,0/8:9,0,0,0/7:15,0,0,0]
+</font>
+309.212922 <font color="green">[Hello(6): seq=143 sym=10,7,5,3,8,4,2,9 sysInfo= stat=10:12,0,0,0/7:15,0,0,0/5:3,0,0,0/3:15,0,0,0/8:11,0,0,0/4:6,0,0,0/2:12,0,0,0/9:7,0,0,0]
+</font>
+309.220391 <font color="green">[Hello(8): seq=143 sym=2,7,5,6,3,4,10 sysInfo= stat=2:8,0,0,0/7:0,0,0,0/5:14,0,0,0/6:11,0,0,0/3:12,0,0,0/4:8,0,0,0/10:4,0,0,0]
+</font>
+309.292752 <font color="green">[Hello(7): seq=143 sym=10,5,6,8,3,2,4,9 sysInfo= stat=10:10,0,0,0/5:15,0,0,0/6:11,0,0,0/8:14,0,0,0/3:7,0,0,0/2:10,0,0,0/4:6,0,0,0/9:15,0,0,0]
+</font>
+309.298137 <font color="green">[Hello(3): seq=143 sym=1,2,7,5,6,8,4 sysInfo= stat=1:15,0,0,0/2:6,0,0,0/7:10,0,0,0/5:7,0,0,0/6:2,0,0,0/8:11,0,0,0/4:12,0,0,0]
+</font>
+309.320530 <font color="green">[Hello(5): seq=143 sym=1,2,7,6,3,8,4 sysInfo= stat=1:15,0,0,0/2:5,0,0,0/7:13,0,0,0/6:4,0,0,0/3:9,0,0,0/8:11,0,0,0/4:11,0,0,0]
+</font>
+----------------------------------------------------------------------
+309.860258 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc
+     -- color-indic=0 64 74 ff
+309.870417 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 e7 ce
+309.880395 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 9d 83
+309.890395 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 ea 69
+309.900394 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 90 24
+309.910395 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 1e f3
+309.920394 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 64 be
+309.930397 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=688.0ms assoc 64 e1 2f
+</pre></body></html>

@@ -1,0 +1,149 @@
+<html>
+<body>
+<a href="state.0000051.html">&gt;&gt;</a>&nbsp;&nbsp;<a href="state.0000049.html">&lt;&lt;</a>&nbsp;&nbsp;<a href="../comment.html">IDX</a>&nbsp;&nbsp;<a href="state.0000001.html">[start]</a> <a href="state.0000030.html">-100</a> <a href="state.0000045.html">-25</a> <a href="state.0000049.html">-5</a> <a href="state.0000050.html">+0</a> <a href="state.0000051.html">+5</a> <a href="state.0000055.html">+25</a> <a href="state.0000070.html">+100</a><h1> [250.265830994] </h1><img src="image/state.0000050.png"><h2> Previous packets </h2><pre>----------------------------------------------------------------------
+245.537036 beacon01(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc
+     -- color-indic=0 64 a1 c3
+245.547017 beacon02(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 32 f2
+245.557017 beacon03(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 48 bf
+245.567018 beacon04(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 3f 55
+245.577018 beacon05(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 45 18
+245.587018 beacon06(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 cb cf
+245.597019 beacon07(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 b1 82
+245.607023 beacon0a(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 c0 89
+245.617023 beacon09(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 4e 5e
+245.627026 beacon08(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 34 13
+245.638491 PARSE ERROR************************
+Traceback (most recent call last):
+  File "PacketAnalysis.py", line 167, in showOperaPacket
+    structPacket = OperaPacketParse.parsePacket(rawPacket)
+  File "../../pkg-python/HipSens/Core/OperaPacketParse.py", line 461, in parsePacket
+    return parseHelloMessage(data)
+  File "../../pkg-python/HipSens/Core/OperaPacketParse.py", line 125, in parseHelloMessage
+    struct.unpack("!H",linkList[:2])[0])
+error: unpack requires a string argument of length 2
+    48 34 07 00 00 a1 00 02 02 12 02 00 03 00 05 00 06 00 04 00 08 00 09 00 0a 00 01 00 53 04 00 00 00 00 4c 12 00 01 00 02 00 0f 00 0a 00 04 00 02 00 03 00 0e 00 08 4d 8a
+
+245.641203 <font color="green">[Hello(8): seq=104 sym=5,2,3,4,7,6,9,10,1 sysInfo= stat=5:3,0,0,0/2:2,0,0,0/3:5,0,0,0/4:8,0,0,0/7:7,0,0,0/6:10,0,0,0/9:0,0,0,0/10:11,0,0,0/1:9,0,0,0]
+</font>
+245.646456 <font color="green">[Hello(9): seq=104 sym=5,2,3,4,7,6,8,10,1 sysInfo= stat=5:9,0,0,0/2:9,0,0,0/3:13,0,0,0/4:5,0,0,0/7:7,0,0,0/6:14,0,0,0/8:14,0,0,0/10:13,0,0,0/1:5,0,0,0]
+</font>
+245.652977 <font color="green">[Hello(6): seq=161 sym=2,3,5,4,7,9,8,10,1 sysInfo= stat=2:6,0,0,0/3:3,0,0,0/5:12,0,0,0/4:9,0,0,0/7:2,0,0,0/9:8,0,0,0/8:7,0,0,0/10:4,0,0,0/1:5,0,0,0]
+</font>
+245.657933 <font color="green">[Hello(10): seq=93 sym=6,3,2,5,9,8,7,4,1 sysInfo= stat=6:2,0,0,0/3:3,0,0,0/2:3,0,0,0/5:6,0,0,0/9:2,0,0,0/8:1,0,0,0/7:2,0,0,0/4:0,0,0,0/1:12,0,0,0]
+</font>
+----------------------------------------------------------------------
+246.325166 beacon01(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc
+     -- color-indic=0 64 65 cd
+246.335149 beacon02(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 f6 fc
+246.345148 beacon03(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 8c b1
+246.355149 beacon04(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 fb 5b
+246.365149 beacon05(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 81 16
+246.375149 beacon06(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 0f c1
+246.385149 beacon07(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 75 8c
+246.395155 beacon0a(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 04 87
+246.405155 beacon09(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 8a 50
+246.415154 beacon08(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 f0 1d
+246.426312 <font color="green">[Hello(4): seq=162 sym=5,7,6,2,3,9,8,10 sysInfo= stat=5:6,0,0,0/7:5,0,0,0/6:10,0,0,0/2:8,0,0,0/3:0,0,0,0/9:11,0,0,0/8:11,0,0,0/10:12,0,0,0]
+</font>
+246.429338 <font color="green">[Hello(2): seq=159 sym=4,5,7,6,3,9,8,10,1 sysInfo= stat=4:3,0,0,0/5:7,0,0,0/7:7,0,0,0/6:11,0,0,0/3:0,0,0,0/9:13,0,0,0/8:10,0,0,0/10:6,0,0,0/1:1,0,0,0]
+</font>
+246.432212 <font color="green">[Hello(5): seq=162 sym=7,6,4,3,1,9,8,10,2 sysInfo= stat=7:1,0,0,0/6:14,0,0,0/4:2,0,0,0/3:0,0,0,0/1:0,0,0,0/9:10,0,0,0/8:3,0,0,0/10:10,0,0,0/2:1,0,0,0]
+</font>
+246.435679 <font color="green">[Hello(1): seq=70 sym=4,2,9,5,10,3,8,6,7 sysInfo= stat=4:5,0,0,0/2:8,0,0,0/9:9,0,0,0/5:11,0,0,0/10:4,0,0,0/3:3,0,0,0/8:4,0,0,0/6:13,0,0,0/7:13,0,0,0]
+</font>
+246.442402 <font color="green">[Hello(3): seq=162 sym=5,7,6,4,2,8,9,10,1 sysInfo= stat=5:11,0,0,0/7:14,0,0,0/6:11,0,0,0/4:6,0,0,0/2:9,0,0,0/8:0,0,0,0/9:11,0,0,0/10:15,0,0,0/1:13,0,0,0]
+</font>
+----------------------------------------------------------------------
+247.113299 beacon01(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc
+     -- color-indic=0 64 d9 c8
+247.123281 beacon02(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 4a f9
+247.133281 beacon03(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 30 b4
+247.143282 beacon04(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 47 5e
+247.153284 beacon05(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 3d 13
+247.163281 beacon06(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 b3 c4
+247.173283 beacon07(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 c9 89
+247.183289 beacon0a(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 b8 82
+247.193288 beacon09(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 36 55
+247.203287 beacon08(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 4c 18
+247.214448 <font color="green">[Hello(7): seq=162 sym=2,3,5,6,4,8,9,10,1 sysInfo= stat=2:2,0,0,0/3:3,0,0,0/5:0,0,0,0/6:11,0,0,0/4:5,0,0,0/8:3,0,0,0/9:4,0,0,0/10:15,0,0,0/1:9,0,0,0]
+</font>
+247.218736 <font color="green">[Hello(10): seq=94 sym=6,3,2,5,9,8,7,4,1 sysInfo= stat=6:2,0,0,0/3:4,0,0,0/2:4,0,0,0/5:7,0,0,0/9:2,0,0,0/8:1,0,0,0/7:2,0,0,0/4:1,0,0,0/1:13,0,0,0]
+</font>
+247.222406 <font color="green">[Hello(9): seq=105 sym=5,2,3,4,7,6,8,10,1 sysInfo= stat=5:10,0,0,0/2:10,0,0,0/3:14,0,0,0/4:6,0,0,0/7:7,0,0,0/6:15,0,0,0/8:14,0,0,0/10:14,0,0,0/1:6,0,0,0]
+</font>
+247.228474 <font color="green">[Hello(6): seq=162 sym=2,3,5,4,7,9,8,10,1 sysInfo= stat=2:7,0,0,0/3:4,0,0,0/5:13,0,0,0/4:10,0,0,0/7:2,0,0,0/9:8,0,0,0/8:7,0,0,0/10:5,0,0,0/1:6,0,0,0]
+</font>
+247.232312 <font color="green">[Hello(8): seq=105 sym=5,2,3,4,7,6,9,10,1 sysInfo= stat=5:4,0,0,0/2:3,0,0,0/3:6,0,0,0/4:9,0,0,0/7:7,0,0,0/6:11,0,0,0/9:1,0,0,0/10:12,0,0,0/1:10,0,0,0]
+</font>
+----------------------------------------------------------------------
+247.901432 beacon01(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc
+     -- color-indic=0 64 ed d0
+247.911414 beacon02(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 7e e1
+247.921415 beacon03(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 04 ac
+247.931416 beacon04(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 73 46
+247.941414 beacon05(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 09 0b
+247.951415 beacon06(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 87 dc
+247.961415 beacon07(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 fd 91
+247.971420 beacon0a(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 8c 9a
+247.981420 beacon09(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 02 4d
+247.991420 beacon08(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 78 00
+248.002598 <font color="green">[Hello(2): seq=160 sym=4,5,7,6,3,9,8,10,1 sysInfo= stat=4:3,0,0,0/5:8,0,0,0/7:8,0,0,0/6:12,0,0,0/3:1,0,0,0/9:14,0,0,0/8:11,0,0,0/10:7,0,0,0/1:2,0,0,0]
+</font>
+248.005885 <font color="green">[Hello(3): seq=163 sym=5,7,6,4,2,8,9,10,1 sysInfo= stat=5:11,0,0,0/7:15,0,0,0/6:12,0,0,0/4:6,0,0,0/2:9,0,0,0/8:1,0,0,0/9:12,0,0,0/10:0,0,0,0/1:13,0,0,0]
+</font>
+248.008784 <font color="green">[Hello(4): seq=163 sym=5,7,6,2,3,9,8,10,1 sysInfo= stat=5:7,0,0,0/7:6,0,0,0/6:11,0,0,0/2:9,0,0,0/3:1,0,0,0/9:12,0,0,0/8:12,0,0,0/10:13,0,0,0/1:0,0,0,0]
+</font>
+248.014197 <font color="green">[Hello(5): seq=163 sym=7,6,4,3,1,9,8,10,2 sysInfo= stat=7:2,0,0,0/6:15,0,0,0/4:2,0,0,0/3:1,0,0,0/1:1,0,0,0/9:11,0,0,0/8:4,0,0,0/10:11,0,0,0/2:1,0,0,0]
+</font>
+----------------------------------------------------------------------
+248.689565 beacon01(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc
+     -- color-indic=0 64 51 d5
+248.699547 beacon02(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 c2 e4
+248.709548 beacon03(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 b8 a9
+248.719547 beacon04(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 cf 43
+248.729548 beacon05(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 b5 0e
+248.739548 beacon06(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 3b d9
+248.749550 beacon07(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 41 94
+248.759554 beacon0a(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 30 9f
+248.769555 beacon09(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 be 48
+248.779555 beacon08(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 c4 05
+248.790724 PARSE ERROR************************
+Traceback (most recent call last):
+  File "PacketAnalysis.py", line 167, in showOperaPacket
+    structPacket = OperaPacketParse.parsePacket(rawPacket)
+  File "../../pkg-python/HipSens/Core/OperaPacketParse.py", line 461, in parsePacket
+    return parseHelloMessage(data)
+  File "../../pkg-python/HipSens/Core/OperaPacketParse.py", line 127, in parseHelloMessage
+    assert struct.calcsize("H")*len(neighAddrList) == len(linkList)
+AssertionError
+    48 34 06 00 00 a3 00 02 02 12 02 00 03 00 05 00 04 00 07 00 09 00 08 00 0a 00 01 00 53 04 00 00 00 00 4c 12 00 08 00 05 00 0e 00 0b 00 02 00 08 00 08 00 05 00 06 4c 87
+
+248.795329 <font color="green">[Hello(8): seq=106 sym=5,2,3,4,7,6,9,10,1 sysInfo= stat=5:5,0,0,0/2:4,0,0,0/3:7,0,0,0/4:10,0,0,0/7:7,0,0,0/6:11,0,0,0/9:1,0,0,0/10:12,0,0,0/1:10,0,0,0]
+</font>
+248.799417 <font color="green">[Hello(7): seq=163 sym=2,3,5,6,4,8,9,10,1 sysInfo= stat=2:3,0,0,0/3:4,0,0,0/5:1,0,0,0/6:12,0,0,0/4:6,0,0,0/8:4,0,0,0/9:5,0,0,0/10:0,0,0,0/1:9,0,0,0]
+</font>
+248.802194 <font color="green">[Hello(9): seq=106 sym=5,2,3,4,7,6,8,10,1 sysInfo= stat=5:11,0,0,0/2:11,0,0,0/3:15,0,0,0/4:7,0,0,0/7:7,0,0,0/6:0,0,0,0/8:15,0,0,0/10:14,0,0,0/1:6,0,0,0]
+</font>
+248.805860 <font color="green">[Hello(10): seq=95 sym=6,3,2,5,9,8,7,4,1 sysInfo= stat=6:3,0,0,0/3:5,0,0,0/2:4,0,0,0/5:8,0,0,0/9:3,0,0,0/8:2,0,0,0/7:2,0,0,0/4:2,0,0,0/1:14,0,0,0]
+</font>
+----------------------------------------------------------------------
+249.477700 beacon01(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc
+     -- color-indic=0 64 95 db
+249.487683 beacon02(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 06 ea
+249.497682 beacon03(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 7c a7
+249.507684 beacon04(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 0b 4d
+249.517683 beacon05(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 71 00
+249.527683 beacon06(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 ff d7
+249.537683 beacon07(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 85 9a
+249.547687 beacon0a(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 f4 91
+249.557688 beacon09(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 7a 46
+249.567688 beacon08(faad) #0 coord=01,02,03,04,05,06,07,0a,09,08 cycle=688.0ms assoc 64 00 0b
+249.579134 <font color="green">[Hello(5): seq=164 sym=7,6,4,3,1,9,8,10,2 sysInfo= stat=7:3,0,0,0/6:0,0,0,0/4:2,0,0,0/3:1,0,0,0/1:1,0,0,0/9:12,0,0,0/8:5,0,0,0/10:12,0,0,0/2:1,0,0,0]
+</font>
+249.582501 <font color="green">[Hello(2): seq=161 sym=4,5,7,6,3,9,8,10,1 sysInfo= stat=4:4,0,0,0/5:9,0,0,0/7:9,0,0,0/6:13,0,0,0/3:2,0,0,0/9:15,0,0,0/8:12,0,0,0/10:8,0,0,0/1:2,0,0,0]
+</font>
+249.589042 <font color="green">[Hello(3): seq=164 sym=5,7,6,4,2,8,9,10,1 mpr= sysInfo= stat=5:12,0,0,0/7:0,0,0,0/6:13,0,0,0/4:7,0,0,0/2:9,0,0,0/8:2,0,0,0/9:13,0,0,0/10:1,0,0,0/1:13,0,0,0]
+</font>
+249.594598 <font color="green">[Hello(4): seq=164 sym=5,7,6,2,3,9,8,10,1 sysInfo= stat=5:8,0,0,0/7:7,0,0,0/6:12,0,0,0/2:9,0,0,0/3:1,0,0,0/9:13,0,0,0/8:13,0,0,0/10:14,0,0,0/1:0,0,0,0]
+</font>
+</pre></body></html>

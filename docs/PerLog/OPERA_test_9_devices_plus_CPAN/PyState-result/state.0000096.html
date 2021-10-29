@@ -1,0 +1,84 @@
+<html>
+<body>
+<a href="state.0000097.html">&gt;&gt;</a>&nbsp;&nbsp;<a href="state.0000095.html">&lt;&lt;</a>&nbsp;&nbsp;<a href="../comment.html">IDX</a>&nbsp;&nbsp;<a href="state.0000001.html">[start]</a> <a href="state.0000076.html">-100</a> <a href="state.0000091.html">-25</a> <a href="state.0000095.html">-5</a> <a href="state.0000096.html">+0</a> <a href="state.0000097.html">+5</a> <a href="state.0000101.html">+25</a><h1> [480.052371025] </h1><img src="image/state.0000096.png"><h2> Previous packets </h2><pre>----------------------------------------------------------------------
+475.618863 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc
+     -- color-indic=0 64 c6 00
+475.629025 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 55 31
+475.638998 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 2f 7c
+475.648999 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 58 96
+475.658998 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 22 db
+475.668999 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 ac 0c
+475.678999 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 d6 41
+475.689003 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 53 d0
+475.833036 PARSE ERROR************************
+Traceback (most recent call last):
+  File "PacketAnalysis.py", line 167, in showOperaPacket
+    structPacket = OperaPacketParse.parsePacket(rawPacket)
+  File "/home/user/HgRep/OCARI-2014/Sniffer-OPERA/OperaPacketParse.py", line 461, in parsePacket
+    return parseHelloMessage(data)
+  File "/home/user/HgRep/OCARI-2014/Sniffer-OPERA/OperaPacketParse.py", line 127, in parseHelloMessage
+    assert struct.calcsize("H")*len(neighAddrList) == len(linkList)
+AssertionError
+    48 2a 01 00 00 ef 00 02 02 08 05 00 03 00 02 00 04 00 01 04 08 00 06 00 53 04 00 ea 00 a1 4c 0c 22 01 d1 07 e0 02 e0 14 2c 03 cf 12 4c 62
+
+----------------------------------------------------------------------
+476.727238 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc
+     -- color-indic=0 64 d2 6e
+476.737408 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 41 5f
+476.747373 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 3b 12
+476.757373 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 4c f8
+476.767373 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 36 b5
+476.777373 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 b8 62
+476.787374 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 c2 2f
+476.797379 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 47 be
+476.847942 <font color="green">[Hello(8): seq=239 sym=2,7,5,6,3,4,10,9 color=3 sysInfo=MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=2:10,15,14,13/7:9,15,0,10/5:7,0,0,2/6:8,0,14,11/3:0,15,13,12/4:2,0,13,12/10:13,10,8,7/9:2,14,7,2]
+</font>
+476.850518 <font color="green">[Hello(4): seq=239 sym=1,2,5,6,3,8,7 color=6 sysInfo=MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=1:14,0,3,0/2:2,1,0,13/5:7,14,1,2/6:13,0,0,12/3:7,0,14,11/8:0,0,11,2/7:3,14,0,10]
+</font>
+476.945050 <font color="green">[Hello(5): seq=239 sym=1,2,7,6,3,8,4 color=1 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=1:15,0,2,0/2:2,1,0,13/7:0,14,0,10/6:15,1,15,12/3:5,0,1,12/8:1,15,12,2/4:4,1,13,12]
+</font>
+476.950924 <font color="green">[Hello(2): seq=239 sym=1,7,5,3,8,4,6 color=4 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=1:14,1,2,0/7:12,14,0,10/5:1,1,1,2/3:1,0,14,11/8:0,0,12,2/4:2,15,15,13/6:6,1,15,12]
+</font>
+476.953997 <font color="green">[Hello(7): seq=239 sym=10,5,6,8,3,2,4,9 color=2 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=10:2,10,12,8/5:9,0,1,2/6:9,1,15,12/8:4,1,14,3/3:14,15,0,12/2:15,15,13,11/4:15,15,6,10/9:11,0,15,3]
+</font>
+476.973622 <font color="green">[Hello(6): seq=239 sym=10,7,5,3,8,4,2,9 color=7 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=10:14,10,9,7/7:10,15,0,10/5:2,14,1,2/3:6,0,0,13/8:2,1,14,3/4:9,0,9,12/2:0,15,13,11/9:14,14,14,3]
+</font>
+476.977168 <font color="green">[Hello(3): seq=239 sym=1,2,7,5,6,8,4 color=5 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=1:15,1,2,0/2:3,0,15,14/7:14,14,0,9/5:15,1,14,2/6:11,1,0,12/8:0,0,12,2/4:5,0,0,13]
+</font>
+----------------------------------------------------------------------
+477.835617 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc
+     -- color-indic=0 64 6e 6b
+477.845774 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 fd 5a
+477.855752 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 87 17
+477.865752 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 f0 fd
+477.875751 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 8a b0
+477.885752 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 04 67
+477.895753 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 7e 2a
+477.905758 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 fb bb
+478.049150 <font color="green">[Hello(1): seq=240 sym=5,3,2,4 asym=8,6 color=0/10 sysInfo=hasWarning,MaxColorIndicationCalled,MaxColorResponseCalled,MaxColorRequestCalled,ColoringModeRequestCalled stat=5:2,0,2,2/3:8,0,1,13/2:3,0,0,14/4:5,1,0,14/8:4,0,12,2/6:3,1,15,12]
+</font>
+----------------------------------------------------------------------
+478.943993 beacon01(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc
+     -- color-indic=0 64 aa 65
+478.954158 beacon02(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 39 54
+478.964128 beacon03(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 43 19
+478.974128 beacon04(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 34 f3
+478.984130 beacon05(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 4e be
+478.994129 beacon06(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 c0 69
+479.004129 beacon07(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 ba 24
+479.014133 beacon08(11f6) #0 coord=01,02,03,04,05,06,07,08,0a,09 cycle=1008.0ms assoc 64 3f b5
+479.066722 <font color="green">[Hello(4): seq=240 sym=1,2,5,6,3,8,7 color=6 sysInfo=MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=1:15,0,3,0/2:3,1,0,13/5:8,14,1,2/6:14,0,0,12/3:8,0,14,11/8:1,0,11,2/7:4,14,0,10]
+</font>
+479.105424 <font color="green">[Hello(2): seq=240 sym=1,7,5,3,8,4,6 color=4 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=1:15,1,2,0/7:13,14,0,10/5:1,1,1,2/3:2,0,14,11/8:0,0,12,2/4:3,15,15,13/6:7,1,15,12]
+</font>
+479.124659 <font color="green">[Hello(5): seq=240 sym=1,2,7,6,3,8,4 color=1 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=1:0,0,2,0/2:4,1,0,13/7:1,14,0,10/6:0,1,15,12/3:6,0,1,12/8:1,15,12,2/4:5,1,13,12]
+</font>
+479.160342 <font color="green">[Hello(3): seq=240 sym=1,2,7,5,6,8,4 color=5 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=1:0,1,2,0/2:4,0,15,14/7:14,14,0,9/5:0,1,14,2/6:12,1,0,12/8:0,0,12,2/4:6,0,0,13]
+</font>
+479.183728 <font color="green">[Hello(8): seq=240 sym=2,7,5,6,3,4,10,9 color=3 sysInfo=MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=2:12,15,14,13/7:10,15,0,10/5:9,0,0,2/6:9,0,14,11/3:1,15,13,12/4:4,0,13,12/10:15,10,8,7/9:3,14,7,2]
+</font>
+479.190023 <font color="green">[Hello(6): seq=240 sym=10,7,5,3,8,4,2,9 color=7 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=10:15,10,9,7/7:10,15,0,10/5:3,14,1,2/3:8,0,0,13/8:3,1,14,3/4:9,0,9,12/2:1,15,13,11/9:15,14,14,3]
+</font>
+479.196989 <font color="green">[Hello(7): seq=240 sym=10,5,6,8,3,2,4,9 color=2 sysInfo=hasWarning,MaxColorIndicationCalled,ColoringModeIndicationCalled,MaxColorResponseCalled stat=10:3,10,12,8/5:10,0,1,2/6:11,1,15,12/8:5,1,14,3/3:15,15,0,12/2:1,15,13,11/4:15,15,6,10/9:12,0,15,3]
+</font>
+</pre></body></html>

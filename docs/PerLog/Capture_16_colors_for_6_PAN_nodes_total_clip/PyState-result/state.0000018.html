@@ -1,0 +1,135 @@
+<html>
+<body>
+<a href="state.0000019.html">&gt;&gt;</a>&nbsp;&nbsp;<a href="state.0000017.html">&lt;&lt;</a>&nbsp;&nbsp;<a href="../comment.html">IDX</a>&nbsp;&nbsp;<a href="state.0000001.html">[start]</a> <a href="state.0000013.html">-25</a> <a href="state.0000017.html">-5</a> <a href="state.0000018.html">+0</a> <a href="state.0000019.html">+5</a> <a href="state.0000023.html">+25</a> <a href="state.0000038.html">+100</a><h1> [90.0264451504] </h1><img src="image/state.0000018.png"><h2> Previous packets </h2><pre>----------------------------------------------------------------------
+85.124324 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 66 6b
+85.134267 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 4f 45
+----------------------------------------------------------------------
+85.320410 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 c9 48
+85.330354 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 e0 66
+85.341929 <font color="green">[Hello(2): seq=151 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+85.516494 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 f0 45
+85.526437 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 d9 6b
+----------------------------------------------------------------------
+85.712579 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 bb 52
+85.722523 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 92 7c
+85.734089 <font color="green">[Hello(2): seq=152 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+85.908663 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 82 5f
+85.918607 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 ab 71
+----------------------------------------------------------------------
+86.104748 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 37 3f
+86.114693 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 1e 11
+86.126266 <font color="green">[Hello(2): seq=153 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+86.300832 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 0e 32
+86.310776 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 27 1c
+----------------------------------------------------------------------
+86.496917 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 45 25
+86.506861 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 6c 0b
+86.518449 <font color="green">[Hello(2): seq=154 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+86.693002 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 7c 28
+86.702946 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 55 06
+----------------------------------------------------------------------
+86.889086 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 d3 0b
+86.899030 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 fa 25
+86.910613 <font color="green">[Hello(2): seq=155 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+87.085171 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 ea 06
+87.095114 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 c3 28
+----------------------------------------------------------------------
+87.281255 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 a1 11
+87.291198 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 88 3f
+87.302780 <font color="green">[Hello(2): seq=156 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+87.477342 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 98 1c
+87.487285 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 b1 32
+----------------------------------------------------------------------
+87.673426 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 ff 56
+87.683370 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 d6 78
+87.694934 PARSE ERROR************************
+Traceback (most recent call last):
+  File "PacketAnalysis.py", line 167, in showOperaPacket
+    structPacket = OperaPacketParse.parsePacket(rawPacket)
+  File "../../pkg-python/HipSens/Core/OperaPacketParse.py", line 461, in parsePacket
+    return parseHelloMessage(data)
+  File "../../pkg-python/HipSens/Core/OperaPacketParse.py", line 109, in parseHelloMessage
+    sysInfo,stability,colorInfo = struct.unpack("!HBB", linkList[0:4])
+error: unpack requires a string argument of length 4
+    48 0e 02 00 00 9d 00 02 53 04 00 00 00 00 4c 00 53 62
+
+----------------------------------------------------------------------
+87.869511 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 c6 5b
+87.879454 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 ef 75
+----------------------------------------------------------------------
+88.065596 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 8d 4c
+88.075539 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 a4 62
+88.087121 <font color="green">[Hello(2): seq=158 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+88.261680 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 b4 41
+88.271624 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 9d 6f
+----------------------------------------------------------------------
+88.457765 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 1b 62
+88.467709 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 32 4c
+88.479289 <font color="green">[Hello(2): seq=159 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+88.653849 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 22 6f
+----------------------------------------------------------------------
+88.849934 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 69 78
+88.859878 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 40 56
+----------------------------------------------------------------------
+89.046021 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 50 75
+89.055965 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 79 5b
+89.067539 <font color="green">[Hello(2): seq=160 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+89.242105 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 a7 ec
+89.252049 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 8e c2
+----------------------------------------------------------------------
+89.438191 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 9e e1
+89.448135 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 b7 cf
+89.459720 <font color="green">[Hello(2): seq=161 sysInfo= stat=]
+</font>
+----------------------------------------------------------------------
+89.634276 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 d5 f6
+89.644219 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 fc d8
+----------------------------------------------------------------------
+89.830361 beacon01(adaf) #0 coord=01,02 cycle=176.0ms assoc
+     -- color-indic=0 64 ec fb
+89.840304 beacon02(adaf) #0 coord=01,02 cycle=176.0ms assoc 64 c5 d5
+89.851853 <font color="green">[Hello(2): seq=162 sysInfo= stat=]
+</font>
+</pre></body></html>

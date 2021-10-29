@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OPERA | Overview</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
+<link rel="stylesheet" href="css/layout.css" type="text/css" media="all">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all">
+<script type="text/javascript" src="js/jquery-1.4.2.js" ></script>
+<script type="text/javascript" src="js/cufon-yui.js"></script>
+<script type="text/javascript" src="js/cufon-replace.js"></script>
+<script type="text/javascript" src="js/UkrainianMysl_400.font.js"></script>
+<script type="text/javascript" src="js/HomewardBound_400.font.js"></script>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="js/ie6_script_other.js"></script>
+<script type="text/javascript" src="js/html5.js"></script>
+<![endif]-->
+</head>
+<body id="page2">
+<!-- START PAGE SOURCE -->
+<div class="main">
+ <header>
+    <div class="wrapper">
+ 	<div id="banner">
+	<t>Optimized Protocol for Energy efficient Routing with node Activity scheduling for Wireless Sensor Networks</t>
+	</div>
+    </div>
+    <div id="menu">
+      <div id="menu_left">
+        <div id="menu_right">
+          <nav>
+            <ul>
+ 	      <li><a href="index.html">Home</a></li>
+              <li><a href="overview.html">Overview</a></li> 
+	      <li><a href="documents.html">Documentation</a></li>
+              <li><a href="download.html">Download/Install</a></li>
+	      <li><a href="screenshot.html">ScreenShot</a></li>
+              <li><a href="contact.html">Contacts</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section id="content">
+    <article class="col1">
+      <div class="box1 min_height"> 
+        <h3><span><span><strong>&nbsp;</strong>Architecture of OPERA</span></span></h3>
+        
+        <div class="wrapper pad_bot1">
+          <figure class="left marg_right1"><img src="images/inriaOcari.PNG" width="452" alt="Architecture of OPERA"></figure>
+	  <p><strong>OPERA is a software composed of two modules OSERENA, EOLSR and a set of primitives and functions enabling the interaction of these two modules.</strong></p>  
+	</div>
+	
+        <h3><span><span><strong>&nbsp;</strong>What is OSERENA?</span></span></h3>
+        
+        <div class="wrapper pad_bot1">
+          <figure class="left marg_right1"><img src="images/coloring.png" width="60%" alt="OSERENA coloring"></figure>
+	  <p><strong>OSERENA is a distributed 3-hop coloring algorithm adapted to dense wireless networks. A 3-hop coloring is a coloring that prevents any two neighbors up to 3 hops to have the same color. For instance, in the colored graph on the left, only nodes A and F can share the same color because they are 4 hops away.</strong></p>
+<br><br><br><br>
+<p>The colors computed by OSERENA are used at the MAC layer as follows (see Figure on the left):
+          <figure class="left marg_right1"><img src="images/cycle.png" width="65%" alt="Cycle"></figure>
+
+					<ul class="list2 pad_bot2">
+					<li> <a href="#"></a>Time is divided into cycles. Each cycle is composed of slots.</li>
+					<li> <a href="#"></a>The number of these slots is equal to the maximum number of colors used by OSERENA. Hence, OSERENA should signal this number to the MAC layer.</li>					
+					<li> <a href="#"></a>Each color is mapped to a time slot. Nodes sharing a color transmit in the time slot associated to this color. Hence, transmissions are collision-free. </li>
+					<li> <a href="#"></a>Any sensor is awake in its slot to transmit data. It is also awake during the slots assigned to its neighbors to receive data if there is any, otherwise it comes back to the sleep state. With this periodic wake/sleep scheme, sensors avoid energy wasted in the idle state. A wireless sensor is in the idle state when it is listening to an idle channel in anticipation of possible arrival of pakets. When no packet is received, the node consumes energy because this idle listening.</li>
+					</ul>
+	  </p>  
+	</div>
+
+      <h3><span><span><strong>&nbsp;</strong>What is EOLSR?</span></span></h3>
+        
+        <div class="wrapper pad_bot1">
+        <figure class="left marg_right1"><img src="images/treeEOLSR.png" width="60%" alt="EOLSR tree"></figure>
+	<p><strong>EOLSR is a proactive energy efficient routing protocol supporting nomadism. EOLSR is based on the known routing protocol <a href="http://hipercom.inria.fr/olsr/draft-ietf-manet-olsr-09.txt">OLSR</a> but it is adapted to the context of WSNs. Indeed, EOLSR is adapted to data gathering applications where sensors collect data and route them to a data sink. The most adapted routing structure to this commnication paradigm is a tree. That is why, EOLSR builds a tree rooted at the data sink, called also strategic node.</strong></p>
+<br>
+	<p> EOLSR is composed of two modules. First, EOND (EOlsr Neighborhood Discovery) is responsible for neighborhood discovery and performed via the exchange of messages Hello. Second, EOSTC (EOlsr Strategic Tree Construction) which is responsible for routes contruction.</p>
+	<p>The version of EOLSR implemented in OPERA is distinguished by the following features:
+			<ul class="list2 pad_bot2">
+			<li> <a href="#"></a>To enhance scaling, any node does not store its 2-hop neighbors. Consequently, routing is no longer based on MPRs (MultiPoint Relays).</li>
+			<li> <a href="#"></a>Given that maintaining a route toward any other network node is expensive in terms of energy, storage and bandwidth, EOLSR maintains on each node only a route per sink.</li>
+			<li> <a href="#"></a>Route selection takes into account the energy level of each node.</li>
+			<li> <a href="#"></a>A new message is introduced (Tree Status message) to inform the tree root about the stability of the links in the tree to enable it to trigger coloring by OSERENA. </li> 
+			</ol>
+</p>
+	</div>
+<h3><span><span><strong>&nbsp;</strong>Interactions between OSERENA and EOLSR</span></span></h3>
+        <div class="wrapper pad_bot1">
+<p> In OPERA, EOLSR provides information to OSERENA for: 
+				<ul class="list2 pad_bot2">
+				<li> <a href="#"></a> Coloring triggering: OSERENA starts automatically when the root of the tree verifies that the topology is stable. This avoids recoloring in case of late start-up of a sensor node for instance. It is the responsibility of EOLSR to notify the links stability:
+					<ul class="list3 pad_bot2">
+					<li> <a href="#"></a>In each node, EOLSR monitors a local topology stability condition that is defined by: (1) having a parent in the routing tree; and (2) absence of neighborhood changes (node disappearance or appearance) for a predefined time interval. </li>
+					<li> <a href="#"></a>Each EOLSR node having verified the local stability condition and received a Tree Status(stable) from all its children generates a Tree Status(stable), and transmits it to its parent.</li>
+					<li> <a href="#"></a>At the same time, OPERA copies the topology database from EOLSR to OSERENA. This database contains: the 1-hop neighbors, the parent and the children in the routing tree, the number of descendants of the node in the tree that constitutes the priority of the node in OSERENA, the identification of the tree (address of the root and sequence number of the tree).</li>
+					<li> <a href="#"></a>When the root of the tree receives a Tree Status(stable) from all its children, it deduces that the topology is stable and can trigger the coloring.</li>
+					</ul>
+				<li><a href="#"></a> Topology changes: While running, EOLSR informs OSERENA about:
+						<ul class="list3 pad_bot2">
+						<li> <a href="#"></a>Neighborhood, parent or children changes: This information is useful for OSERENA. For instance, it avoids a node to wait for a dead neighbor to color itself, or to wait for the value maxcolor (the total number of colors used in the subtree  rooted at the transmitter node) from a disappeared child, etc. Consequently, OSERENA should update its neighborhood table.</li>
+						<li> <a href="#"></a>Instability of the tree: In addition to notifying the stability of the topology to the root of the tree, Tree Status messages are transmitted to this root when any node detects an instability state of the tree (Tree Status(unstable) in case of appearance of new neighbor, new parent, etc). This information is useful for the root that can decide to recolor the network for instance.</li> 
+						</ul>
+				</li>
+				</ul>
+	</p>	
+        </div>
+      </div>
+    </article>
+   <article class="col2 pad_left1">
+	<div class="box1">
+        <h2><span><span><strong>&nbsp;</strong>Latest News</span></span></h2>
+        <p><strong class="color1">05.02.2013</strong><br>
+          Initial Release of OPERA at INRIAGForge.<a href="https://gforge.inria.fr/projects/opera/" class="marker">&nbsp;</a></p>
+        </div>
+      <!-- <a href="#" id="banner1"><img src="images/banner1.jpg" alt=""></a> </article>-->
+  </section>
+  <footer>
+    <div class="footerlink">
+      <p class="lf">Copyright &copy; 2013 <a href="#">SiteName</a> - All Rights Reserved</p>
+      <!-- <p class="rf"><a href="http://all-free-download.com/free-website-templates/">Free CSS Templates</a> by <a href="http://www.templatemonster.com/">TemplateMonster</a></p>
+      <div style="clear:both;"></div> -->
+    </div>
+  </footer>
+</div>
+<!-- <script type="text/javascript"> Cufon.now(); </script>-->
+<!-- END PAGE SOURCE -->
+<!-- <div align=center>This template  downloaded form <a href='http://all-free-download.com/free-website-templates/'>free website templates</a></div> -->
+</body>
+</html>
